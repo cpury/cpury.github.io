@@ -4,8 +4,8 @@ title: About me
 permalink: /about/
 ---
 
-Hi, this is Max Schumacher, a guy who likes traveling and learning.
+Hi, this is Max, a guy who likes learning.
 
 ### Contact me
 
-Say `Hello` at [phraine@gmail.com](mailto:phraine@gmail.com).
+Drop a line at [phraine@gmail.com](mailto:phraine@gmail.com).

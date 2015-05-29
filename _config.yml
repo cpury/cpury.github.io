@@ -11,9 +11,9 @@ url: https://cpury.github.io
 
 # Harmony theme configuration. Please change accordingly.
 harmony:
-  name: What.
+  name: mlfun
   # Little description about your site
-  description: Things I think about
+  description: Fun with other people's research
   # 'meta_description:' Write an awesome description for your new site here.
   # It will appear in your document head meta (for Google search results) and 
   # in your feed.xml site description.
@@ -21,8 +21,8 @@ harmony:
    A blog by a Machine Learning enthusiast.
   basetheme: theme-base-01 # pre defined thmes are darken, blue-water, redish.
   author: # Author details
-    name: Max Schumacher
-    email: phraine@gmail.com
+    name: Max
+    email: machine.learning.fun@gmail.com
     url: https://cpury.github.io/
 
   # Google Analytics key, leave blank to ignore

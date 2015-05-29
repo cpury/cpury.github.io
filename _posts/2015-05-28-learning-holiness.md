@@ -2,60 +2,102 @@
 layout: post
 title: "Learning Holiness"
 date:   2015-05-28 18:33:45
-description: "Learning how to produce holy texts with Recurrent Neural Networks"
+description: "Learning how to produce Bible-like texts with Recurrent Neural Networks"
 categories: machine-learning
 permalink: learning-holiness
 tags: [machine-learning, recurrent-neural-networks]
 ---
 
-If you have not heard about [Andrej Karpathy](http://karpathy.github.io/)'s incredibly awesome [blog post](http://karpathy.github.io/2015/05/21/rnn-effectiveness/) about Recurrent Neural Networks, I recommend you drop everything and head over there right now!
+### Inspiration
+If you have not heard about [Andrej Karpathy](http://karpathy.github.io/)'s incredibly awesome [blog post](http://karpathy.github.io/2015/05/21/rnn-effectiveness/) about Recurrent Neural Networks, I recommend you drop everything right now and head over there for a great read! All of this here is based on his work and provided code.
 
-Needless to say, I nearly fainted as I thought of all the cool applications I could try this on. Expect more updates on this in the coming weeks for sure.
+##### TL;DR, technical bits
+Recurrent Neural Networks are a variant of Machine Learning algorithms that learn how to predict the next item in a sequence. One nice application is to use text data as a sequence of characters. Then, after you trained the model on the dataset, you can ask it to "sample" data for you. I.e., produce strings of text it thinks are (greedily) likely.
 
-For now, let's be a little blasphemous: Here's a Recurrent Neural Network trained on the King James Bible giving us Holy Scripture:
+##### TL;DR, fun bits
+This sampled data can look a lot like the data you learned from, e.g. Andrej lets it create fake Shakespeare prose, fake Wikipedia articles, fake math papers, etc. The results are surprisingly smart, but also hilariously dumb. Imagine all the fun we can have with this! One drawback is that you need huge amounts of data to train - in a way the model needs to learn the English language from scratch.
 
-> 11:22 And the sons of Jesus said unto them, The sword shall not be able to
-> the angels.
-> 
-> 10:2 And there were not a servant of the day of the day, and the works of
-> the camp, and all the flocks of the congregation of the heathen, and the sun
-> shall serve thee.
-> 
-> 22:24 And the LORD shall see me with the house of the LORD's house, that the men of God
-> for the heavens of the gates of the head of the kings
-> of the children of Israel.
-> 
-> 23:24 And Joshua said unto them, When they shall see the land of the king's hand,
-> and the same which is in all the rivers of the earth.
-> 
-> 12:11 And the waters shall come to pass, as the men of God is a poor of the nations of all
-> the waters of the sun of the captivity of the morning, and set up
-> them, and said unto him, We have made the corner of the first and
-> after thee.
-> 
-> 11:3 And the servants of the children of Israel said unto her, Why have I cometh to
-> meet them upon the stars and hope in the truth to thee.
-> 
-> 24:2 And they were not his people, and have seen and thine anger, and there were the
-> statutes, and all the things that the LORD
-> commanded the same for them.
-> 
-> 6:7 And he said unto him, Go out of them that dwell in the sea, and the strangers of the earth.
-> 
-> 27:34 And the end of the congregation of the gates of the waters, that they came to pass, that the
-> men of the beasts of the house of the LORD, and the
-> kingdom of the face of the stones of the same to him, and shall see them to be
-> displeased to can seven days.
-> 
-> 16:2 And the fourth shall the king of Israel spake unto the covenant of the sea, and there is a crown of the kings of the
-> congregation, and the day of the first rejoice.
-> 
-> 10:14 And the brethren parted on the ship offerings, and the LORD said unto him,
-> that thou art for the desolate of the sea.
+### Idea
+I instantly went to work with what any sane person would have done: I started amassing copious amounts of erotic Harry Potter fanfiction, which - as is common knowledge - amounts to about 20% of the internet's plain text data. ([^1]) But this endeavour got boring quickly... After one hour of skimming terribly written, dirty dirty paragraphs and copy-pasting them to a text file, I only had little more than one megabyte of data. So I went for the second best option: The Bible!
+
+### Experiment
+The King James version of the Bible is well-known and easily accessible, while also amounting to a beautiful 4.4 MB of data. How could I resist the temptation?
+
+As for the settings, I was lazy and also bound by my CPU, so I went for Andrej's default parameters.
+
+### Results
+
+> 26:24 And the children of Israel went up from the LORD the word of the LORD, and set the
+> LORD in the house of the LORD.
+
+Teehee. You might wonder what infinte loop I get stuck in setting the sampling to a low temperature (aka what's the most cliché sequence in the Bible?). Well, remember those family trees in the Old Testament?
+
+> 1:12 And the sons of Jehoiada, and Jehoshaphat the son of Jehoiada, and
+> Jehoshaphat the son of Jehoiada, and Jehoshaphat the son of
+> Joseph, and the sons of Jehoiadan the son of Jehoiada, and
+> Jehoshaphat the son of Jehoiada, and the sons of Jehoiadan
+> the son of Jehoiada, and Jehoshaphat the son of Jehoiadan the son of
+> Joseph the son of Jehoiada, and Jehoshaphat the son of Jehoiada, and
+> Jehoshaphat the son of Jehoiada.
+
+Just like in *One Hundred Years of Solitude*!
+
+What about setting the temperature high, i.e. letting it become more experimental?
+
+> 8:13 And Moses, leported is with all men, so Job, thereof: herings into
+> the temple of Beliah.
+
+BELIAH DEMANDS HERRINGS!
+
+Here are some more of my favorites at various temperatures:
+
+> 4:24 And the LORD said unto him, Behold, I have sent the burnt offering, and the dust of the sea, and delivered
+> against the LORD the priests and the head of the house of Moses.
+
+Dramatic!
+
+> 24:10 And the LORD said unto the LORD, Behold, I will set thee out of the
+> children of Israel, and the LORD shall be a son of the LORD.
+
+Haha, that would be hilarious! Oh, wait.
+
+> 2:1 There is no father's house.
+
+That's pretty deep, man...
+
+> 1:12 And there was not a little care any bear, and they thereof, and the
+> wicked of the LORD shall be the father of the house of his heart.
+
+Care Bears..?
+
+> 1:15 And the sons of Aaron, and the sons of Jesse said, I am the LORD.
+
+Are you, now?
+
+> 19:20 And the LORD said unto Moses, God is the streets of the sons of
+> Mattan, the son of Jeroboam the son of Ziphath.
+
+God speaks in metaphors.
+
+
+### Analysis
+
+I am really happy about the results. I literally downloaded the code, grabbed a plain text copy of the Bible and started training a minute later. The trained model seems to understand paragraphs and has some basic notions about sentence structure and the functions of words.
+
+Still, even though the output shown here is *relatively* coherent, I can promise you that most of it is not. It's a slight dissappointment that while we get correct paragraphs with line numbers, the line numbers do not follow any order. Also, their length vary greatly.
+
+Overall, I assume the 4+ million characters of the text are not enough to get overly confident about the concepts presented. Maybe I should add other translations? Other holy texts?
+
+I wonder if we can take advantage of Transfer Learning here, i.e. have a basic model run on as much English text of all epochs and styles as possible, and then seed the sampling with some Bible quote?
+
+Anyway, please leave your comments and own experiments or ideas in the comment section below!
 
 **Amen!**
 
-### Notes:
 
-- I currently only have my MacBook Air, so training is slow. I thus stayed with the default parameters. Once I get a better model, I will update this post
-- Note how the line numbers are not ordered, yet. It probably needs much more material to learn how they should increase
+### Disclaimer
+
+I'm an absolute layperson when it comes to the Bible / Christianity / being religious. My main reasons are earnestly to have a fun little experiment with an amazing new Machine Learning technique and a well-known, just-go-for-it dataset. If you feel like this insulted you or your religion, I'm terribly sorry about that.
+
+
+[^1]: **Source:** Common knowledge. I told you already.
