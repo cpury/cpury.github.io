@@ -19,7 +19,7 @@ Recurrent Neural Networks are a variant of Machine Learning algorithms that lear
 This sampled data can look a lot like the data you learned from, e.g. Andrej lets it create fake Shakespeare prose, fake Wikipedia articles, fake math papers, etc. The results are surprisingly smart, but also hilariously dumb. Imagine all the fun we can have with this! One drawback is that you need huge amounts of data to train - in a way the model needs to learn the English language from scratch.
 
 ### Idea
-I instantly went to work with what any sane person would have done: I started amassing copious amounts of erotic Harry Potter fanfiction, which - as is common knowledge - amounts to about 20% of the internet's plain text data. ([^1]) But this endeavour got boring quickly... After one hour of skimming terribly written, dirty dirty paragraphs and copy-pasting them to a text file, I only had little more than one megabyte of data. So I went for the second best option: The Bible!
+I instantly went to work with what any sane person would have done: I started amassing copious amounts of erotic Harry Potter fanfiction, which - as is common knowledge - amounts to about 20% of the Internet's plain text data. ([^1]) But this endeavor got boring quickly... After one hour of skimming terribly written, dirty dirty paragraphs and copy-pasting them to a text file, I only had little more than one megabyte of data. So I went for the second best option: The Bible!
 
 ### Experiment
 The King James version of the Bible is well-known and easily accessible, while also amounting to a beautiful 4.4 MB of data. How could I resist the temptation?
@@ -31,7 +31,7 @@ As for the settings, I was lazy and also bound by my CPU, so I went for Andrej's
 > 26:24 And the children of Israel went up from the LORD the word of the LORD, and set the
 > LORD in the house of the LORD.
 
-Teehee. You might wonder what infinte loop I get stuck in setting the sampling to a low temperature (aka what's the most cliché sequence in the Bible?). Well, remember those family trees in the Old Testament?
+Teehee. You might wonder what infinite loop I get stuck in setting the sampling to a low temperature (aka what's the most cliché sequence in the Bible?). Well, remember those family trees in the Old Testament?
 
 > 1:12 And the sons of Jehoiada, and Jehoshaphat the son of Jehoiada, and
 > Jehoshaphat the son of Jehoiada, and Jehoshaphat the son of
@@ -85,7 +85,7 @@ God speaks in metaphors.
 
 I am really happy about the results. I literally downloaded the code, grabbed a plain text copy of the Bible and started training a minute later. The trained model seems to understand paragraphs and has some basic notions about sentence structure and the functions of words.
 
-Still, even though the output shown here is *relatively* coherent, I can promise you that most of it is not. It's a slight dissappointment that while we get correct paragraphs with line numbers, the line numbers do not follow any order. Also, their length vary greatly.
+Still, even though the output shown here is *relatively* coherent, I can promise you that most of it is not. It's a slight disappointment that while we get correct paragraphs with line numbers, the line numbers do not follow any order. Also, their length vary greatly.
 
 Overall, I assume the 4+ million characters of the text are not enough to get overly confident about the concepts presented. Maybe I should add other translations? Other holy texts?
 
