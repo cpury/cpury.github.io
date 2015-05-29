@@ -9,7 +9,6 @@ tags: [machine-learning, recurrent-neural-networks]
 comments: true
 ---
 
-### Inspiration
 If you have not heard about [Andrej Karpathy](http://karpathy.github.io/)'s incredibly awesome [blog post](http://karpathy.github.io/2015/05/21/rnn-effectiveness/) about Recurrent Neural Networks, I recommend you drop everything right now and head over there for a great read! All of this here is based on his work and provided code.
 
 ##### TL;DR, technical bits
