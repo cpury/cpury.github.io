@@ -6,6 +6,7 @@ description: "Learning how to produce Bible-like texts with Recurrent Neural Net
 categories: machine-learning
 permalink: learning-holiness
 tags: [machine-learning, recurrent-neural-networks]
+comments: true
 ---
 
 ### Inspiration
