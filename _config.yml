@@ -11,18 +11,18 @@ url: https://cpury.github.io
 
 # Harmony theme configuration. Please change accordingly.
 harmony:
-  name: mlfun
+  name: Culture Ex Machina
   # Little description about your site
-  description: Fun with other people's research
+  description: A blog about learning, engineering and life
   # 'meta_description:' Write an awesome description for your new site here.
   # It will appear in your document head meta (for Google search results) and
   # in your feed.xml site description.
   meta_description: > #
-   A blog by a Machine Learning enthusiast.
+   Max Schumacher's blog about learning, engineering, life and all the rest.
   basetheme: theme-base-01 # pre defined thmes are darken, blue-water, redish.
   author: # Author details
     name: Max
-    email: machine.learning.fun@gmail.com
+    email: phraine@gmail.com
     url: https://cpury.github.io/
 
   # Google Analytics key, leave blank to ignore
