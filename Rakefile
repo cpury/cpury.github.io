@@ -6,6 +6,6 @@ task :preview do
 end
 
 desc 'Search site and print specific deprecation warnings'
-task :check do 
+task :check do
     sh "jekyll doctor"
 end

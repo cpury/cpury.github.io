@@ -1,13 +1,13 @@
-# Harmony Jekyll theme general configurations 
+# Harmony Jekyll theme general configurations
 
 # Base URL
-baseurl: 
+baseurl:
 
 # Site live URL
 url: https://cpury.github.io
 
-# Localhost 
-# url: http://127.0.0.1:4000  
+# Localhost
+# url: http://127.0.0.1:4000
 
 # Harmony theme configuration. Please change accordingly.
 harmony:
@@ -15,9 +15,9 @@ harmony:
   # Little description about your site
   description: Fun with other people's research
   # 'meta_description:' Write an awesome description for your new site here.
-  # It will appear in your document head meta (for Google search results) and 
+  # It will appear in your document head meta (for Google search results) and
   # in your feed.xml site description.
-  meta_description: > # 
+  meta_description: > #
    A blog by a Machine Learning enthusiast.
   basetheme: theme-base-01 # pre defined thmes are darken, blue-water, redish.
   author: # Author details
@@ -29,20 +29,20 @@ harmony:
   google_analytics_key: UA-63484688-1
 
   # Profile links, leave blank to ignore
-  social: 
+  social:
     github: cpury
   # Toggle disclaimer in footer
   show_disclaimer: true
 
-# Conversion / Build settings 
+# Conversion / Build settings
 markdown:    kramdown
 # This is how you put pygments config in jekyll 2.0 instead of pygments: true
-highlighter: pygments 
+highlighter: pygments
 
 # Permalinks
 permalink:        pretty
 
-exclude: 
+exclude:
   - CNAME
   - Gemfile
   - Rakefile
