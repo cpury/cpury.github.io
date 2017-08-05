@@ -9,13 +9,13 @@ tags: [machine-learning, recurrent-neural-networks]
 disqus: true
 ---
 
-If you have not heard about [Andrej Karpathy](http://karpathy.github.io/)'s incredibly awesome [blog post](http://karpathy.github.io/2015/05/21/rnn-effectiveness/) about Recurrent Neural Networks, I recommend you drop everything right now and head over there for a great read! All of this here is based on his work and provided code.
+Let's teach a neural network to write Bible-like texts! If you have not heard about [Andrej Karpathy](http://karpathy.github.io/)'s incredibly awesome [blog post](http://karpathy.github.io/2015/05/21/rnn-effectiveness/) about Recurrent Neural Networks, I recommend you drop everything right now and head over there for a great read! All of this here is based on his work and provided code.
 
 ##### TL;DR, technical bits
-Recurrent Neural Networks are a variant of Machine Learning algorithms that learn how to predict the next item in a sequence. One nice application is to use text data as a sequence of characters. Then, after you trained the model on the dataset, you can ask it to "sample" data for you. I.e., produce strings of text it thinks are (greedily) likely.
+Recurrent Neural Networks are a variant of Machine Learning algorithms that work with sequential data as inputs and/or outputs, e.g. text data. Here we let them look at large bodies of text, and based on one part of the text teach it to predict the next. You can then sample this prediction to produce text the network thinks to be likely. Since this is a stochastic process, you can also tell it how "inventive" it should be while doing this.
 
 ##### TL;DR, fun bits
-This sampled data can look a lot like the data you learned from, e.g. Andrej lets it create fake Shakespeare prose, fake Wikipedia articles, fake math papers, etc. The results are surprisingly smart, but also hilariously dumb. Imagine all the fun we can have with this! One drawback is that you need huge amounts of data to train - in a way the model needs to learn the English language from scratch.
+This sampled data can look a lot like the data you learned from, e.g. Andrej lets it create fake Shakespeare prose, fake Wikipedia articles, fake math papers, etc. The results are surprisingly smart in some ways, but also hilariously dumb in others. Imagine all the fun we can have with this! One drawback is that you need huge amounts of data to train - in a way the model needs to learn the English language from scratch.
 
 ### Idea
 I instantly went to work with what any sane person would have done: I started amassing copious amounts of erotic Harry Potter fanfiction, which - as is common knowledge - amounts to about 20% of the Internet's plain text data. ([^1]) But this endeavor got boring quickly... After one hour of skimming terribly written, dirty dirty paragraphs and copy-pasting them to a text file, I only had little more than one megabyte of data. So I went for the second best option: The Bible!
@@ -84,7 +84,7 @@ God speaks in metaphors.
 
 I am really happy about the results. I literally downloaded the code, grabbed a plain text copy of the Bible and started training a minute later. The trained model seems to understand paragraphs and has some basic notions about sentence structure and the functions of words.
 
-Still, even though the output shown here is *relatively* coherent, I can promise you that most of it is not. It's a slight disappointment that while we get correct paragraphs with line numbers, the line numbers do not follow any order. Also, their length vary greatly.
+Still, even though the output shown here seems *slightly* coherent, I can promise you that most of it is not. It's a little disappointing that while we get correct paragraphs with line numbers, the line numbers do not follow any order. Also, their length vary greatly.
 
 Overall, I assume the 4+ million characters of the text are not enough to get overly confident about the concepts presented. Maybe I should add other translations? Other holy texts?
 
