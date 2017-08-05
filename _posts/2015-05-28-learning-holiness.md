@@ -4,7 +4,7 @@ title: "Learning Holiness"
 date:   2015-05-28 18:33:45
 description: "Learning how to produce Bible-like texts with Recurrent Neural Networks"
 categories: machine-learning
-permalink: learning-holiness
+permalink: learning-holiness/
 tags: [machine-learning, recurrent-neural-networks]
 disqus: true
 ---
