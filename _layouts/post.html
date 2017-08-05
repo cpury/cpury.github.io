@@ -1,54 +1,94 @@
 ---
 layout: default
+disqus: false
+archive: false
+post_class: post-template
 ---
 
-<div class="page-content wc-container">
-  <div class="post">
-    <h1>{{ page.title }}</h1>
-    <p class="post-meta">
-      {% if (page.categories.size > 0 %}
-      <span class="categories">
-        {{ page.categories | array_to_sentence_string }}
-      </span> |
-      {% endif %}
-      <span class="post-date">
-        {{ page.date | date: "%b %-d, %Y" }}
-      </span>
-    </p>
-    <div class="post">
-      {{ content }}
-    </div>
-  </div>
+<header class="main-header post-head {% if page.cover %}" style="background-image: url({{ page.cover }}) {%else%}no-cover{% endif %}">
+    <nav class="main-nav {% if page.cover %} overlay {% endif %} clearfix">
+        <a class="back-button icon-arrow-left" href="{{ site.baseurl }}">Home</a>
+        <a class="subscribe-button icon-feed" href="{{ site.baseurl }}feed.xml">Subscribe</a>
+    </nav>
+</header>
 
-  {% if site.related_posts %}
-  <div class="related">
-    <h4>Related Posts</h2>
-    <ul class="posts">
-      {% for post in site.related_posts limit:3 %}
-      <li>
-        <span>{{ post.date | date_to_string }} &raquo;</span>
-        <a href="{{ post.url | prepend: site.baseurl | prepend: site.url }}">{{ post.title }}</a>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-  {% endif %}
+<main class="content" role="main">
 
-  <div class="post-footer">
-    <div class="column-1">
-      {% if page.previous %}
-        <a href="{{page.previous.url | prepend: site.baseurl | prepend: site.url }}"><< Older</a>
-      {% else %}
-        <span><< Older</span>
-      {% endif %}
-    </div>
-    <div class="column-2"><a href="{{ '/' | prepend: site.baseurl | prepend: site.url }} ">Home</a></div>
-    <div class="column-3">
-      {% if page.next %}
-        <a href="{{ page.next.url | prepend: site.baseurl | prepend: site.url }}">Newer >></a>
-      {% else %}
-        <span>Newer >></span>
-      {% endif %}
-    </div>
-  </div>
-</div>
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">{{ page.title }}</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="{{ page.date | date:"%Y-%m-%d" }}">{{ page.date | date_to_string }}</time>
+                {% if page.categories.size > 0 %}
+                    {{ page.categories | array_to_sentence_string | prepend: 'on ' }}
+                {% endif %}
+            </section>
+        </header>
+
+<!--         <header class="post-header">
+            <a id="blog-logo" href="{{site.url}}">
+                {% if site.logo %}
+                    <img src="{{site.logo}}" alt="{{ site.name }}" />
+                {% else %}
+                    <span class="blog-title">{{ site.name }}</span>
+                {%endif%}
+            </a>
+        </header> -->
+
+        <!-- <span class="post-meta">
+            <time datetime="{{ page.date | date:"%Y-%m-%d" }}">{{ page.date | date_to_string }}</time>
+            {% if page.categories.size > 0 %}
+                {{ page.categories | array_to_sentence_string | prepend: 'on ' }}
+            {% endif %}
+        </span> -->
+
+        <!-- <h1 class="post-title">{{ page.title }}</h1> -->
+
+        <section class="post-content">
+            {{content}}
+        </section>
+
+        {% if page.archive %}
+        <section class="archive">
+            <h5>Archive</h5>
+            <ul>
+                {% for post in site.posts %}
+                    <li><span>{{ post.date | date_to_string }}</span>  <a href="{{ post.url }}">{{ post.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+
+        <footer class="post-footer">
+            <!-- If we want to display author's name and bio -->
+            {% if site.author %}
+                <figure class="author-image">
+                    <a class="img" href="{{ site.baseurl }}" style="background-image: url(/assets/images/avatar.jpg)">
+                    <span class="hidden">{{site.author}}'s Picture</span></a>
+                </figure>
+                <section class="author">
+                    <!-- Author Name -->
+                    <h4> {{ site.author }} </h4>
+                    <!-- Author Bio -->
+                    <p>
+                        Hi, this is Max, a guy who likes learning. I've worked
+                        with a bunch of startups around the world and am
+                        currently freelancing as a full stack web dev in Berlin.
+                    </p>
+                </section>
+            {% endif %}
+
+            <!-- Share links section -->
+            {% include share.html %}
+
+            <!-- Disqus comments -->
+            {% if page.disqus %}
+                {% include disqus.html %}
+            {% endif %}
+
+        </footer>
+
+    </article>
+
+</main>

@@ -1,57 +1,17 @@
-# Harmony Jekyll theme general configurations
+name: Culture Ex Machina
+description: A blog about machine learning, engineering, and other trivialities
+meta_description: > #
+ Max Schumacher's blog about learning, engineering, life and all the rest.
 
-# Base URL
-baseurl:
-
-# Site live URL
-url: https://cpury.github.io
-
-# Localhost
-# url: http://127.0.0.1:4000
-
-# Harmony theme configuration. Please change accordingly.
-harmony:
-  name: Culture Ex Machina
-  # Little description about your site
-  description: A blog about learning, engineering and life
-  # 'meta_description:' Write an awesome description for your new site here.
-  # It will appear in your document head meta (for Google search results) and
-  # in your feed.xml site description.
-  meta_description: > #
-   Max Schumacher's blog about learning, engineering, life and all the rest.
-  basetheme: theme-base-01 # pre defined thmes are darken, blue-water, redish.
-  author: # Author details
-    name: Max
-    email: phraine@gmail.com
-    url: https://cpury.github.io/
-
-  # Google Analytics key, leave blank to ignore
-  google_analytics_key: UA-63484688-1
-
-  # Profile links, leave blank to ignore
-  social:
-    github: cpury
-  # Toggle disclaimer in footer
-  show_disclaimer: true
-
-# Conversion / Build settings
-markdown:    kramdown
-# This is how you put pygments config in jekyll 2.0 instead of pygments: true
+markdown: kramdown
 highlighter: pygments
+logo: false
+paginate: 10
+baseurl:
+domain_name: https://cpury.github.io/
+google_analytics_key: UA-63484688-1
+gems: [jekyll-paginate]
 
-# Permalinks
-permalink:        pretty
-
-exclude:
-  - CNAME
-  - Gemfile
-  - Rakefile
-  - README.md
-  - .gitignore
-  - .sass-cache
-  - Gemfile.lock
-
-# Sass conversion configs
-sass:
-    sass_dir: assets/css/_sass
-    style: :compressed
+# Details for the RSS feed generator
+url: https://cpury.github.io/
+author: Max Schumacher

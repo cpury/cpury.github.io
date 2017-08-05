@@ -1,8 +1,7 @@
-_site/
+_site
 .DS_Store
-.*.swp
-.idea
-.sass-cache/
+*.swp
+.sass-cache
 *~
 bourbon/
 Gemfile.lock
