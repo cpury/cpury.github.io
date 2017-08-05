@@ -9,4 +9,5 @@ bunch of startups at various stages. Currently I'm freelancing based in Germany.
 
 ### Contact me
 
-Drop a line at [max@maxschumacher.info](mailto:max@maxschumacher.info).
+Drop a line at [max@maxschumacher.info](mailto:max@maxschumacher.info) or
+find more ways to contact me on [my website](http://www.maxschumacher.info/).
