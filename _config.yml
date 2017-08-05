@@ -4,7 +4,7 @@ meta_description: > #
  Max Schumacher's blog about learning, engineering, life and all the rest.
 
 markdown: kramdown
-highlighter: pygments
+highlighter: rouge
 logo: false
 paginate: 10
 baseurl: 
