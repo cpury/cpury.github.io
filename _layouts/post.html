@@ -26,25 +26,6 @@ post_class: post-template
             </section>
         </header>
 
-<!--         <header class="post-header">
-            <a id="blog-logo" href="{{site.url}}">
-                {% if site.logo %}
-                    <img src="{{site.logo}}" alt="{{ site.name }}" />
-                {% else %}
-                    <span class="blog-title">{{ site.name }}</span>
-                {%endif%}
-            </a>
-        </header> -->
-
-        <!-- <span class="post-meta">
-            <time datetime="{{ page.date | date:"%Y-%m-%d" }}">{{ page.date | date_to_string }}</time>
-            {% if page.categories.size > 0 %}
-                {{ page.categories | array_to_sentence_string | prepend: 'on ' }}
-            {% endif %}
-        </span> -->
-
-        <!-- <h1 class="post-title">{{ page.title }}</h1> -->
-
         <section class="post-content">
             {{content}}
         </section>
@@ -61,28 +42,23 @@ post_class: post-template
         {% endif %}
 
         <footer class="post-footer">
-            <!-- If we want to display author's name and bio -->
             {% if site.author %}
                 <figure class="author-image">
                     <a class="img" href="/" style="background-image: url(/assets/images/avatar.jpg)">
                     <span class="hidden">{{site.author}}'s Picture</span></a>
                 </figure>
                 <section class="author">
-                    <!-- Author Name -->
                     <h4> {{ site.author }} </h4>
-                    <!-- Author Bio -->
                     <p>
-                        Hi, this is Max, a guy who likes learning. I've worked
-                        with a bunch of startups around the world and am
-                        currently freelancing as a full stack web dev in Berlin.
+                        Hi, this is Max, a guy who likes learning. I've worked around the world with a
+                        bunch of startups at various stages. Currently I'm freelancing as a Machine
+                        Learning and Full-Stack Web Engineer based in Germany.
                     </p>
                 </section>
             {% endif %}
 
-            <!-- Share links section -->
             {% include share.html %}
 
-            <!-- Disqus comments -->
             {% if page.disqus %}
                 {% include disqus.html %}
             {% endif %}

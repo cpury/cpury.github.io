@@ -7,7 +7,7 @@ markdown: kramdown
 highlighter: rouge
 logo: false
 paginate: 10
-baseurl: 
+baseurl:
 domain_name: https://cpury.github.io
 google_analytics_key: UA-63484688-1
 gems: [jekyll-paginate]

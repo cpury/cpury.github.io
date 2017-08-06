@@ -4,8 +4,9 @@ title: About me
 permalink: /about/
 ---
 
-Hi, this is Max, a guy who likes learning. I've worked around the world at a
-bunch of startups at various stages. Currently I'm freelancing based in Germany.
+Hi, this is Max, a guy who likes learning. I've worked around the world with a
+bunch of startups at various stages. Currently I'm freelancing as a Machine
+Learning and Full-Stack Web Engineer based in Germany.
 
 ### Contact me
 
