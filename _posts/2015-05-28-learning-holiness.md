@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Learning Holiness"
+title: "Learning Holiness with Recurrent Neural Networks"
 date:   2015-05-28 18:33:45
 description: "Learning how to produce Bible-like texts with Recurrent Neural Networks"
 categories: machine-learning
