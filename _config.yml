@@ -1,4 +1,5 @@
 name: Culture Ex Machina
+title: Culture Ex Machina - A blog about machine learning, engineering, and other trivialities
 description: A blog about machine learning, engineering, and other trivialities
 meta_description: > #
  Max Schumacher's blog about learning, engineering, life and all the rest.
@@ -15,3 +16,13 @@ gems: [jekyll-paginate]
 # Details for the RSS feed generator
 url: https://cpury.github.io/
 author: Max Schumacher
+
+social:
+  name: Max Schumacher
+  links:
+    - https://www.linkedin.com/in/max-schumacher-530a216a/
+    - https://github.com/cpury
+    - https://angel.co/max-schumacher-1
+
+gems:
+  - jekyll-seo-tag

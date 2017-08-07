@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Learning Math on Character-basis with LSTMs"
+title: "Learning Math with LSTMs and Keras"
 description: "Let's build a neural network that can do math. In Keras."
 categories: machine-learning
 permalink: learning-math/
@@ -95,6 +95,9 @@ Here's our basic code. Note that I'm referencing some global variables (IN
 ALL CAPS), we will define them later.
 
 {% highlight python %}
+import itertools
+import random
+
 def generate_all_equations(shuffle=True, max_count=None):
     """
     Generates all possible math equations given the global configuration.
@@ -128,9 +131,9 @@ MAX_NUMBER = 999
 This will generate us equations like this:
 
 ```
-'89 + 21'
-'36 + 89'
-'20 + 35'
+'89 + 7'
+'316 + 189'
+'240 + 935'
 ```
 
 For any of these equation strings, we can easily get the result in Python using
@@ -151,6 +154,8 @@ arbitrary, as long as we decode it the same way later on. Here's some
 code I used for this:
 
 {% highlight python %}
+import numpy as np
+
 def one_hot(index, length):
     """
     Generates a one-hot vector of the given length that's 1.0 at the given
@@ -167,42 +172,39 @@ def one_hot(index, length):
 def char_to_one_hot_index(char):
     """
     Given a char, encodes it as an integer to be used in a one-hot vector.
-    Will only work with digits and the operations we use, everything else
+    Will only work with digits, dots and +-signs, everything else
     (including spaces) will be mapped to a single value.
     """
     if char.isdigit():
         return int(char)
-    elif char in OPERATIONS:
-        return 10 + OPERATIONS.index(char)
+    elif char == '+':
+        return 10
     elif char == '.':
-        return 10 + len(OPERATIONS)
+        return 11
     else:
-        return 10 + len(OPERATIONS) + 1
+        return 12
 
 
 def char_to_one_hot(char):
     """
     Given a char, encodes it as a one-hot vector based on the encoding above.
     """
-    length = 10 + len(OPERATIONS) + 2
-    return one_hot(char_to_one_hot_index(char), length)
+    return one_hot(char_to_one_hot_index(char), 13)
 
 
 def one_hot_index_to_char(index):
     """
     Given an index, returns the character encoded with that index.
-    Will only work with encoded digits or operations, everything else will
+    Will only work with encoded digits, dots or +, everything else will
     return the space character.
     """
     if index <= 9:
         return str(index)
 
-    index -= 10
+    if index == 10:
+        return '+'
 
-    if index < len(OPERATIONS):
-        return OPERATIONS[index]
-
-    if index == len(OPERATIONS):
+    if index == 11:
         return '.'
 
     return ' '
