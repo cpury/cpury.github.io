@@ -351,7 +351,7 @@ Now, let's build the model. Thanks to Keras, this is quite straightforward.
 First, we need to decide what the shape of our inputs is supposed to be. Since
 it's a matrix with a one-hot-vector for each position in the equation string,
 this is simply `(MAX_EQUATION_LENGTH, N_FEATURES)`. We'll pass that input to a
-first layer consisting of 128 LSTM cells. Each will look at the input,
+first layer consisting of 256 LSTM cells. Each will look at the input,
 character by character, and output a single value.
 
 Now, ideally we'd use the activation of each LSTM for each of the sequence
@@ -392,13 +392,13 @@ def build_model():
     model = Sequential()
 
     # Encoder:
-    model.add(LSTM(128, input_shape=input_shape))
+    model.add(LSTM(256, input_shape=input_shape))
 
     # The RepeatVector-layer repeats the input n times
     model.add(RepeatVector(MAX_RESULT_LENGTH))
 
     # Decoder:
-    model.add(LSTM(128, return_sequences=True))
+    model.add(LSTM(256, return_sequences=True))
 
     model.add(TimeDistributed(Dense(N_FEATURES)))
     model.add(Activation('softmax'))
@@ -492,8 +492,8 @@ everything in a file `training.py` and run it via `python training.py`.
 
 ### Results
 
-Running the code as it is described here, I get to an accuracy of `.95` on the
-test set after 120 epochs.
+Running the code as it is described here, I get to an accuracy of `0.98` on the
+test set after 50 epochs.
 
 Let's see how the training evolved:
 
@@ -513,56 +513,57 @@ As expected, the output is pretty random.
 ##### Epoch 10
 
 ```
-Validation loss:      1.339
-Validation accuracy:  0.486
+Validation loss:      1.249
+Validation accuracy:  0.520
 
 Example predictions:
-454 + 873 = 1399   (expected: 1327)
-573 + 106 =  679   (expected:  679)
-501 + 423 =  999   (expected:  924)
-782 + 494 = 1299   (expected: 1276)
-900 + 512 = 1479   (expected: 1412)
+57 + 418  =  405   (expected:  475)
+817 + 492 = 1326   (expected: 1309)
+462 + 897 = 1321   (expected: 1359)
+807 + 604 = 1416   (expected: 1411)
+94 + 27   =   62   (expected:  121)
 ```
 
 Wow, already got the basic idea of numbers and especially 3-digit vs 4-digit.
 One example is spot-on even.
 
+##### Epoch 20
+
+```
+Validation loss:      0.450
+Validation accuracy:  0.840
+
+Example predictions:
+272 + 724 =  996   (expected:  996)
+531 + 906 = 1437   (expected: 1437)
+297 + 686 =  983   (expected:  983)
+58 + 645  =  713   (expected:  703)
+354 + 436 =  890   (expected:  790)
+```
+
+Almost there!
+
 ##### Epoch 50
 
 ```
-Validation loss:      0.931
-Validation accuracy:  0.637
+Validation loss:      0.060
+Validation accuracy:  0.979
 
 Example predictions:
-220 + 642 =  865   (expected:  862)
-710 + 426 = 1139   (expected: 1136)
-231 + 901 = 1144   (expected: 1132)
-822 + 666 = 1488   (expected: 1488)
-915 + 565 = 1470   (expected: 1480)
+3 + 353   =  355   (expected:  356)
+502 + 816 = 1318   (expected: 1318)
+425 + 198 =  623   (expected:  623)
+932 + 99  = 1031   (expected: 1031)
+647 + 487 = 1134   (expected: 1134)
 ```
 
-We're getting there! The numbers are generally right except for some single
-digits.
+Validation accuracy stopped improving here, so I canceled the training.
+As you see, the results are basically perfect, though the accuracy of 98%
+means we're still doing some small mistakes from time to time.
 
-##### Epoch 150
-
-```
-Validation loss:      0.116
-Validation accuracy:  0.961
-
-Example predictions:
-726 + 639 = 1365   (expected: 1365)
-807 + 373 = 1180   (expected: 1180)
-68 + 852  =  920   (expected:  920)
-364 + 495 =  859   (expected:  859)
-914 + 743 = 1657   (expected: 1657)
-```
-
-It started overfitting here, so I stopped. As you see, the results are
-basically perfect, though the accuracy of 96% means we're still doing some
-small mistakes from time to time.
-
-
+I found these are mostly when numbers < 100 or even < 10 are in the equation.
+It might be there are not enough training examples for these cases. Maybe if
+we padded numbers with zeros, this confusion wouldn't exist.
 
 
 ### Analysis
@@ -578,10 +579,8 @@ I was able to get quite for on ones as complex as
 division, or anything with decimals at all. Usually that either means the
 model is not complex enough (try increasing the hidden units or depth of
 encoder and decoder) or we simply could use some more training examples. Maybe
-also the training process can be improved, e.g. by regularization techniques
-like dropout or batch normalization. It's quite silly that we get up to 96%
-accuracy and then plateau... I'm sure with more tweaking and patience, this
-can be improved.
+also the training process can be improved, e.g. with regularization
+techniques like dropout etc.
 
 Feel free to pass on hints, ideas for improvement, or your own results in the
 comments or as issues on my [repository](https://github.com/cpury/lstm-math).
