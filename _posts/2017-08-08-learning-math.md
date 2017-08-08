@@ -573,13 +573,15 @@ TODO Add analysis of single neurons, etc.
 ### Further Experiments
 
 There's lots to do! Of course we can increase the complexity of the equations.
-I was able to learn on ones as complex as
+I was able to get quite for on ones as complex as
 `131 + 83 - 744 * 33 (= -24338)`, but haven't really gotten it to work with
 division, or anything with decimals at all. Usually that either means the
 model is not complex enough (try increasing the hidden units or depth of
 encoder and decoder) or we simply could use some more training examples. Maybe
 also the training process can be improved, e.g. by regularization techniques
-like dropout or batch normalization.
+like dropout or batch normalization. It's quite silly that we get up to 96%
+accuracy and then plateau... I'm sure with more tweaking and patience, this
+can be improved.
 
 Feel free to pass on hints, ideas for improvement, or your own results in the
 comments or as issues on my [repository](https://github.com/cpury/lstm-math).
