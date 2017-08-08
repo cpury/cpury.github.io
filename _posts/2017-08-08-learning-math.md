@@ -91,7 +91,7 @@ If you're doing this from scratch, you will want to work in a new virtualenv.
 I also recommend using Python 3, because it's really time we got over Python
 2.x... If you don't know how virtualenv works, I really recommend looking into
 them. You can find a short tutorial
-(here)[http://python-guide-pt-br.readthedocs.io/en/latest/dev/virtualenvs/].
+[here](http://python-guide-pt-br.readthedocs.io/en/latest/dev/virtualenvs/).
 
 Once your virtualenv is up and running, install these requirements:
 
@@ -100,7 +100,7 @@ pip install numpy tensorflow keras
 ```
 
 If you run into trouble with Tensorflow, follow
-(their guide)[https://www.tensorflow.org/install/].
+[their guide](https://www.tensorflow.org/install/).
 
 Great! You can paste the code below into a shell, or store it in a file, it's
 up to you.
@@ -111,7 +111,7 @@ up to you.
 For now, let's build some equations! We're going to go real simple here and
 just work with easy-peasy addition of two small natural numbers. Once we get
 that to work, we can build more funky stuff later on. See the
-(full code)[https://github.com/cpury/lstm-math] to find out how to build more
+[full code](https://github.com/cpury/lstm-math) to find out how to build more
 complex equations.
 
 To make sure we build each possible equation only once, we're going to use a
