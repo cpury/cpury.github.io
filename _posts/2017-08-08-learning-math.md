@@ -355,7 +355,7 @@ first layer consisting of 256 LSTM cells. Each will look at the input,
 character by character, and output a single value.
 
 Now, ideally we'd use the activation of each LSTM for each of the sequence
-items and then use them as outputs to our decoder. It seems Keras is having
+items and then use them as inputs to our decoder. It seems Keras is having
 a hard time with this, so the accepted workaround is to let the LSTM cells
 output single values each, and then repeat these vectors using `RepeatVector`
 to feed the decoder network. There's an issue on Keras discussing this
