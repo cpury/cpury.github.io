@@ -28,33 +28,34 @@ about: 'about'
 
 <main id="content" class="content" role="main">
 
-
     <div class="extra-pagination inner">
         {% include pagination.html %}
     </div>
 
     {% for post in paginator.posts %}
+    {% unless post.draft %}
 
-    <article class="post">
-        <header class="post-header">
-            <h2 class="post-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
-        </header>
-        <section class="post-excerpt">
-            {{ post.excerpt }} <a class="read-more" href="{{ post.url }}">&raquo;</a>
-        </section>
-        <footer class="post-meta">
-            {% if site.author %}
-                <img class="author-thumb" src="/assets/images/avatar.jpg" alt="Author's profile picture" nopin="nopin" />
-                {{ site.author }}
-            {% endif %}
-            {% if post.categories.size > 0 %}
-                {{ post.categories | array_to_sentence_string | prepend: 'on ' }}
-            {% endif %}
-            <time class="post-date" datetime="{{ post.date | date:"%Y-%m-%d" }}">
-                {{ post.date | date_to_string }}
-            </time>
-        </footer>
-    </article>
+      <article class="post">
+          <header class="post-header">
+              <h2 class="post-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
+          </header>
+          <section class="post-excerpt">
+              {{ post.excerpt }} <a class="read-more" href="{{ post.url }}">&raquo;</a>
+          </section>
+          <footer class="post-meta">
+              {% if site.author %}
+                  <img class="author-thumb" src="/assets/images/avatar.jpg" alt="Author's profile picture" nopin="nopin" />
+                  {{ site.author }}
+              {% endif %}
+              {% if post.categories.size > 0 %}
+                  {{ post.categories | array_to_sentence_string | prepend: 'on ' }}
+              {% endif %}
+              <time class="post-date" datetime="{{ post.date | date:"%Y-%m-%d" }}">
+                  {{ post.date | date_to_string }}
+              </time>
+          </footer>
+      </article>
+    {% endunless %}
 
     {% endfor %}
 
