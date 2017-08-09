@@ -16,17 +16,17 @@ learning, things have started to make less sense...
 
 Today we want to teach the machines to do math... Again! But instead of feeding
 them with optimized, known representations of numbers and calling hard-coded
-operations on them, we will feed in math formulas along with their results,
-character by character, and have the machine figure out how to interpret them
-and arrive at the results by itself.
+operations on them, we will feed in strings representing math formulas along
+with strings representing their results, character by character, and have the machine figure out how to interpret them and arrive at the results on its own.
 
-The trained model is much more human: Not all results are exact, but they are
-close. It's more of an approximation than an exact calculation. As a human, I
-surely can relate to almost-correct math, if anything.
+The resulting model is much more human: Not all results are exact, but they are
+close. It's more of an approximation than an exact calculation. As a 100%
+human, I surely can relate to almost-correct math, if anything.
 
 Today's post will be much more practical than usual, so if you want to build
-this at home, get your Python ready and your virtualenv up to speed! You can
-find the complete code with some changes [here](https://github.com/cpury/lstm-math).
+this at home, get your long neglected Pythons out of their cages! You can find
+the complete code with lots of improvements
+[here](https://github.com/cpury/lstm-math).
 
 
 ### Recurrent Neural Networks and Long-Short-Term-Memory
@@ -36,12 +36,16 @@ for short. More specifically, a kind of RNN known under the fancy name of
 Long-Short-Term-Memory, or LSTM. If you need a primer on these, I can recommend
 [Christopher Olah's "Understanding LSTMs"](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)
 and again
-[Andrej Karpathy's "The Unreasonable Effectiveness of Recurrent Neural Networks"](http://karpathy.github.io/2015/05/21/rnn-effectiveness/).
+[Andrej Karpathy's "The Unreasonable Effectiveness of Recurrent Neural Networks"](http://karpathy.github.io/2015/05/21/rnn-effectiveness/). But to
+summarize: RNN are essentially "neurons" that not only look at the current
+input, but also remember the input before. LSTMs especially have a complex
+memory mechanism that can learn which parts of the data are important to
+remember, and which can be forgotten.
 
 
 ### Sequence to Sequence Learning
 
-Sequence to sequence learning deals with problems where a source sequence of
+Sequence to sequence learning deals with problems in which a source sequence of
 inputs has to be mapped to a target sequence of outputs where each output
 is not necessarily directly depending on a single input. The classical
 example is translation. How do you learn that a Chinese input phrase
@@ -89,7 +93,7 @@ network needs to grog even more rules like this.
 
 If you're doing this from scratch, you will want to work in a new virtualenv.
 I also recommend using Python 3, because it's really time we got over Python
-2.x... If you don't know how virtualenv works, I really recommend looking into
+2... If you don't know how virtualenv works, I really recommend looking into
 them. You can find a short tutorial
 [here](http://python-guide-pt-br.readthedocs.io/en/latest/dev/virtualenvs/).
 
@@ -102,8 +106,8 @@ pip install numpy tensorflow keras
 If you run into trouble with Tensorflow, follow
 [their guide](https://www.tensorflow.org/install/).
 
-Great! You can paste the code below into a shell, or store it in a file, it's
-up to you.
+Great! You can paste the code below into a Python shell, or store it in a file,
+it's up to you.
 
 
 ### Generating math formulas as strings
@@ -127,6 +131,8 @@ import random
 def generate_all_equations(shuffle=True, max_count=None):
     """
     Generates all possible math equations given the global configuration.
+    If max_count is given, returns that many at most. If shuffle is True,
+    the equation will be generated in random order.
     """
     # Generate all possible unique sets of numbers
     number_permutations = itertools.permutations(
@@ -465,9 +471,10 @@ if __name__ == '__main__':
 {% endhighlight %}
 
 Finally, we need to fill in some of the global variables we used throughout
-the code. With two numbers from 0 to 999, there's 998,001 possible equations.
-Let's use about a sixteenth of that, meaning we'll train on 31,188 and validate
-on 31,187. Here's my config:
+the code. With two numbers from 0 to 999, there's 998k possible equations.
+Let's use about a sixteenth of that and use half of that for testing, meaning
+we'll train on ~31k data points and validate ~31k different data points. Here's
+my config:
 
 {% highlight python %}
 MIN_NUMBER = 0
@@ -525,7 +532,6 @@ Example predictions:
 ```
 
 Wow, already got the basic idea of numbers and especially 3-digit vs 4-digit.
-One example is spot-on even.
 
 ##### Epoch 20
 
@@ -565,21 +571,27 @@ I found these are mostly when numbers < 100 or even < 10 are in the equation.
 It might be there are not enough training examples for these cases. Maybe if
 we padded numbers with zeros, this confusion wouldn't exist.
 
+It is very interesting to note that the mistakes that happen are *small errors*
+in the *space of decimal numbers*, not random errors in the *space of strings*!
+E.g., I saw this mistake:
 
-### Analysis
+```
+32 + 167  = 200    (expected:  199)
+```
 
-TODO Add analysis of single neurons, etc.
+Quite a human error to make. The representations are all correct, it simply
+made a mistake adding up the numbers! Cute for a machine, eh?
 
 
 ### Further Experiments
 
 There's lots to do! Of course we can increase the complexity of the equations.
-I was able to get quite for on ones as complex as
+I was able to get quite far on ones as complex as
 `131 + 83 - 744 * 33 (= -24338)`, but haven't really gotten it to work with
 division, or anything with decimals at all. Usually that either means the
-model is not complex enough (try increasing the hidden units or depth of
-encoder and decoder) or we simply could use some more training examples. Maybe
-also the training process can be improved, e.g. with regularization
+model is not complex enough (we could try increasing the hidden units or depth
+of encoder and decoder) or the problem requires more training examples.
+The training process could be improved, e.g. with regularization
 techniques like dropout etc.
 
 Feel free to pass on hints, ideas for improvement, or your own results in the
