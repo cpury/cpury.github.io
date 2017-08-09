@@ -1,13 +1,12 @@
 ---
 layout: post
 title: "Learning Math with LSTMs and Keras"
-date:   2015-08-08 15:58:50
+date:   2015-08-09 13:45:45
 description: "Let's build a neural network that can do math. In Keras."
 categories: machine-learning
 permalink: learning-math/
 tags: [machine-learning, recurrent-neural-networks, keras]
 disqus: true
-draft: true
 ---
 
 Since ancient times, it has been known that machines excel at math while humans
