@@ -24,7 +24,7 @@ close. It's more of an approximation than an exact calculation. As a 100%
 human, I surely can relate to almost-correct math, if anything.
 
 Today's post will be much more practical than usual, so if you want to build
-this at home, get your long neglected Pythons out of their cages! You can find
+this at home, get your long-neglected Pythons out of their cages! You can find
 the complete code with lots of improvements
 [here](https://github.com/cpury/lstm-math).
 
