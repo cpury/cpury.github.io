@@ -596,7 +596,8 @@ made a mistake adding up the numbers! Cute for a machine, eh?
 Anyway, since our equations only have two variables (the two numbers), we can
 nicely plot the equation space in a 2D pane. So I went ahead and created a
 scatter plot with green dots marking correct predictions and red dots marking
-incorrect ones.
+incorrect ones. Find the code for that
+[here](https://github.com/cpury/lstm-math/blob/master/plot.py).
 
 ![Scatter plot of errors in problem space]({{ site.url }}/assets/images/math_figure_1.png)
 
