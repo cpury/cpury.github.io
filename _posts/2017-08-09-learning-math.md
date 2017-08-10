@@ -638,7 +638,10 @@ elementary school.
 
 Ok, running it with this tweak I've got it to 99.5% validation accuracy
 (proof: `006 + 051 = 0057 (expected: 0057)`), which I will consider good
-enough for today.
+enough for today. Here's the updated plot, which is still not perfect but it
+proves that I was at least partially correct with my hypothesis:
+
+![Scatter plot of errors in problem space with zero-padding]({{ site.url }}/assets/images/math_figure_2.png)
 
 
 ### Further Experiments
