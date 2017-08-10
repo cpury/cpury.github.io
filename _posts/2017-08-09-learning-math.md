@@ -1,13 +1,20 @@
 ---
 layout: post
 title: "Learning Math with LSTMs and Keras"
-date:   2015-08-09 13:45:45
+date:   2017-08-09 13:45:45
 description: "Let's build a neural network that can do math. In Keras."
+excerpt: >
+  Since ancient times, it has been known that machines excel at math while humans
+  are pretty good at detecting cats in pictures. But with the advent of deep
+  learning, things have started to make less sense... (Updated 10 AUG 2017)
 categories: machine-learning
 permalink: learning-math/
 tags: [machine-learning, recurrent-neural-networks, keras]
 disqus: true
 ---
+
+**Updated 10 AUG 2017:** I added a new section at the end in which we explore
+the errors made by the model.
 
 Since ancient times, it has been known that machines excel at math while humans
 are pretty good at detecting cats in pictures. But with the advent of deep
@@ -601,15 +608,16 @@ incorrect ones.
 ![Scatter plot of errors in problem space]({{ site.url }}/assets/images/math_figure_1.png)
 
 Wow, see how numbers below 100 and especially below 10 are really messing with
-the model? Maybe there are not enough examples for this part of the problem
-space?
+the model? And let's not talk about the little red square where both numbers
+are below 100... Maybe there are not enough examples for this part of the
+problem space?
 
 Well,
-I'm going to go out on a limb here. I think the way we notate decimal numbers
-is not very consistent in the lower areas. E.g. most of the training examples
-look like `324 + 123` where each digit can simply be added in a very
-systematic fashion. This can't be directly extended to e.g. `324 + 9`, since
-`9` doesn't really follow the order of digits the model has come to expect.
+I'm going to go out on a limb here. I think the way we as a culture notate
+decimal numbers is not very consistent in the lower bounds. E.g. most of the
+training examples look like `324 + 123` where each digit can simply be added in
+a very systematic fashion. This can't be directly extended to e.g. `324 + 9`,
+since `9` doesn't really follow the order of digits the model has come to expect.
 Imagine you only knew numbers with three digits and now you came across the
 *number* `9`. Reading character by character, when you see the first *digit*
 `9` you would naturally assume "Ah, this means nine-hundred and something".
@@ -625,7 +633,9 @@ to try and avoid it.
 Unless... Maybe if we pad numbers with zeros, the problem becomes a much more
 consistent one! The above equation would become `324 + 009`. The neural
 network has encountered many zeros throughout its lifetime, it knows how to
-deal with them. And here they are semantically the same as anywhere else. Ok,
+deal with them. And here they are semantically the same as anywhere else.
+
+Ok,
 I just said we shouldn't mess with the sampling method and now I'm proposing to
 change the decimal number system altogether. I don't care, I can do what I
 want ([^1]). If it turns out it works better with the zero-paddings, we'll
