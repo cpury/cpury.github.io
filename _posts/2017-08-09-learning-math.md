@@ -247,20 +247,18 @@ def one_hot_index_to_char(index):
 def one_hot_to_char(vector):
     """
     Given a one-hot vector, returns the encoded char.
+    Also works with softmax output vectors by choosing the class with the
+    highest predicted probability.
     """
-    indices = np.nonzero(vector == 1.)
-
-    assert len(indices) == 1
-    if not len(indices[0]) == 1:
-        return ''
-
-    return one_hot_index_to_char(indices[0][0])
+    return one_hot_index_to_char(np.argmax(vector))
 
 
 def one_hot_to_string(matrix):
     """
     Given a matrix of single one-hot encoded char vectors, returns the
     encoded string.
+    Also works with softmax output vectors by choosing the class with the
+    highest predicted probability.
     """
     return ''.join(one_hot_to_char(vector) for vector in matrix)
 {% endhighlight %}
@@ -324,16 +322,6 @@ And later to print out some examples along with their targets:
 {% highlight python %}
 from __future__ import print_function
 
-def prediction_to_string(matrix):
-    """
-    Given the output matrix of the neural network, takes the most likely char
-    predicted at each point and returns the whole string.
-    """
-    return ''.join(
-        one_hot_index_to_char(np.argmax(vector))
-        for vector in matrix
-    )
-
 def print_example_predictions(count, model, x_test, y_test):
     """
     Print some example predictions along with their target from the test set.
@@ -350,7 +338,7 @@ def print_example_predictions(count, model, x_test, y_test):
     for i in range(count):
         print('{} = {}   (expected: {})'.format(
             one_hot_to_string(x_test[prediction_indices[i]]),
-            prediction_to_string(predictions[i]),
+            one_hot_to_string(predictions[i]),
             one_hot_to_string(y_test[prediction_indices[i]]),
         ))
 {% endhighlight %}
