@@ -13,8 +13,8 @@ tags: [machine-learning, recurrent-neural-networks, keras]
 disqus: true
 ---
 
-**Updated 10 AUG 2017:** I added a new section at the end in which we explore
-the errors made by the model.
+**Updated 10 AUG 2017:** I added a new section at the end in which I explore
+the mistakes made by the model.
 
 Since ancient times, it has been known that machines excel at math while humans
 are pretty good at detecting cats in pictures. But with the advent of deep
@@ -576,7 +576,9 @@ means we're still doing some small mistakes from time to time.
 
 ### Analyzing the errors
 
-If you're impressed by that, you can stop reading now. If you see yourself
+If you're impressed by that, you can stop reading now.
+
+If you see yourself
 flipping the table and crying "98%! That's way too low. This model couldn't
 even pass a fourth grade math test!". Well, I guess you're right. Sorry
 everyone, we failed to teach this machine how to math!
