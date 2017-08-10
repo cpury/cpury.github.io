@@ -36,10 +36,10 @@ Long-Short-Term-Memory, or LSTM. If you need a primer on these, I can recommend
 [Christopher Olah's "Understanding LSTMs"](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)
 and again
 [Andrej Karpathy's "The Unreasonable Effectiveness of Recurrent Neural Networks"](http://karpathy.github.io/2015/05/21/rnn-effectiveness/). But to
-summarize: RNN are essentially "neurons" that not only look at the current
-input, but also remember the input before. LSTMs especially have a complex
-memory mechanism that can learn which parts of the data are important to
-remember, and which can be forgotten.
+summarize: RNNs are essentially building blocks of Neural Networks that not only
+look at the current input, but also remember the input before. LSTMs
+especially have a complex memory mechanism that can learn which parts of the
+data are important to remember, and which can be forgotten.
 
 
 ### Sequence to Sequence Learning
@@ -566,10 +566,22 @@ Validation accuracy stopped improving here, so I canceled the training.
 As you see, the results are basically perfect, though the accuracy of 98%
 means we're still doing some small mistakes from time to time.
 
-I found these are mostly when numbers < 100 or even < 10 are in the equation.
-It might be there are not enough training examples for these cases. Maybe if
-we padded numbers with zeros, this confusion wouldn't exist.
 
+### Analyzing the errors
+
+If you're impressed by that, you can stop reading now. If you see yourself
+flipping the table and crying "98%! That's way too low. This model couldn't
+even pass a fourth grade math test!". Well, I guess you're right. Sorry
+everyone, we failed to teach this machine how to math!
+
+But hey, this is ML. Usually these algorithms get applied to
+natural data, like images or audio etc. where small errors like this really
+don't matter at all. I agree though that it's a bummer that this seemingly
+simple, very systematic problem could not be solved completely. So let's have a
+look at what went wrong.
+
+The first thing I notice while browsing the examples is that mistakes mostly
+happen with smaller numbers, e.g. with 2 or even only 1 digits.
 It is very interesting to note that the mistakes that happen are *small errors*
 in the *space of decimal numbers*, not random errors in the *space of strings*!
 E.g., I saw this mistake:
@@ -581,17 +593,64 @@ E.g., I saw this mistake:
 Quite a human error to make. The representations are all correct, it simply
 made a mistake adding up the numbers! Cute for a machine, eh?
 
+Anyway, since our equations only have two variables (the two numbers), we can
+nicely plot the equation space in a 2D pane. So I went ahead and created a
+scatter plot with green dots marking correct predictions and red dots marking
+incorrect ones.
+
+![Scatter plot of errors in problem space]({{ site.url }}/assets/images/math_figure_1.png)
+
+Wow, see how numbers below 100 and especially below 10 are really messing with
+the model? Maybe there are not enough examples for this part of the problem
+space?
+
+Well,
+I'm going to go out on a limb here. I think the way we notate decimal numbers
+is not very consistent in the lower areas. E.g. most of the training examples
+look like `324 + 123` where each digit can simply be added in a very
+systematic fashion. This can't be directly extended to e.g. `324 + 9`, since
+`9` doesn't really follow the order of digits the model has come to expect.
+Imagine you only knew numbers with three digits and now you came across the
+*number* `9`. Reading character by character, when you see the first *digit*
+`9` you would naturally assume "Ah, this means nine-hundred and something".
+You wish! We just skipped the digits for 100s and 10s and went straight to the
+last one without warning you!
+
+The neural network *could* of course learn how to deal with this madness, but
+the training set might just be too skewed towards the higher numbers. We could
+change our random sampling process to favor lower numbers, or use sample
+weights, but since in most natural problems we can't easily do that, I'd like
+to try and avoid it.
+
+Unless... Maybe if we pad numbers with zeros, the problem becomes a much more
+consistent one! The above equation would become `324 + 009`. The neural
+network has encountered many zeros throughout its lifetime, it knows how to
+deal with them. And here they are semantically the same as anywhere else. Ok,
+I just said we shouldn't mess with the sampling method and now I'm proposing to
+change the decimal number system altogether. I don't care, I can do what I
+want ([^1]). If it turns out it works better with the zero-paddings, we'll
+just have to rewrite the textbooks before the first robot kids enter
+elementary school.
+
+Ok, running it with this tweak I've got it to 99.5% validation accuracy
+(proof: `006 + 051 = 0057 (expected: 0057)`), which I will consider good
+enough for today.
+
 
 ### Further Experiments
 
-There's lots to do! Of course we can increase the complexity of the equations.
-I was able to get quite far on ones as complex as
-`131 + 83 - 744 * 33 (= -24338)`, but haven't really gotten it to work with
-division, or anything with decimals at all. Usually that either means the
-model is not complex enough (we could try increasing the hidden units or depth
-of encoder and decoder) or the problem requires more training examples.
-The training process could be improved, e.g. with regularization
+There's lots to do! You could try out e.g. adding sample weights based on the
+magnitude of the numbers to get over the lower-number-problem. We can also
+increase the complexity of the equations. I was able to get quite far on ones
+as complex as `131 + 83 - 744 * 33 (= -24338)`, but haven't really gotten it to
+work with division, or anything with decimals at all. Usually that either means
+the model is not complex enough (we could try increasing the hidden units or
+depth of encoder and decoder) or the problem requires more training examples.
+The training process could also be improved, e.g. with regularization
 techniques like dropout etc.
 
 Feel free to pass on hints, ideas for improvement, or your own results in the
 comments or as issues on my [repository](https://github.com/cpury/lstm-math).
+
+
+[^1]: God complex? Me? That's why we're doing AI in the first place, isn't it?
