@@ -501,6 +501,9 @@ Let's see how the training evolved:
 ##### Before training
 
 ```
+Validation loss:      2.566
+Validation accuracy:  0.041
+
 Example predictions:
 808 + 570 = 9990   (expected: 1378)
 25 + 941  = 3333   (expected:  966)
