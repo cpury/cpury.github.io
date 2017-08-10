@@ -101,7 +101,7 @@ If you're doing this from scratch, you will want to work in a new virtualenv.
 I also recommend using Python 3, because it's really time we got over Python
 2... If you don't know how virtualenv works, I really recommend looking into
 them. You can find a short tutorial
-[here](http://python-guide-pt-br.readthedocs.io/en/latest/dev/virtualenvs/).
+[here](http://docs.python-guide.org/en/latest/dev/virtualenvs/).
 
 Once your virtualenv is up and running, install these requirements:
 
