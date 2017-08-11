@@ -630,35 +630,27 @@ consistent one! The above equation would become `324 + 009`. The neural
 network has encountered many zeros throughout its lifetime, it knows how to
 deal with them. And here they are semantically the same as anywhere else.
 
-Ok,
-I just said we shouldn't mess with the sampling method and now I'm proposing to
-change the decimal number system altogether. I don't care, I can do what I
-want ([^1]). If it turns out it works better with the zero-paddings, we'll
-just have to rewrite the textbooks before the first robot kids enter
-elementary school.
+Alright, I know I just said we shouldn't mess with the sampling method. And
+now I'm proposing to change the decimal number system altogether. Did all this
+work in AI develop my God complex? Maybe. But that's why we're doing AI in the
+first place, isn't it? :)
 
-Ok, running it with this tweak I've got it to 99.5% validation accuracy
+Ok, running it with the zero-padding I've got it to 99.5% validation accuracy
 (proof: `006 + 051 = 0057 (expected: 0057)`), which I will consider good
 enough for today. Here's the updated plot, which is still not perfect but it
-proves that I was at least partially correct with my hypothesis:
+proves that I was mostly correct with my hypothesis:
 
 ![Scatter plot of errors in problem space with zero-padding]({{ site.url }}/assets/images/math_figure_2.png)
 
 
 ### Further Experiments
 
-There's lots to do! You could try out e.g. adding sample weights based on the
-magnitude of the numbers to get over the lower-number-problem. We can also
+There's lots to do! You could try out other ways of getting over this
+lower-number problem, like sample weights, etc. We can also
 increase the complexity of the equations. I was able to get quite far on ones
 as complex as `131 + 83 - 744 * 33 (= -24338)`, but haven't really gotten it to
-work with division, or anything with decimals at all. Usually that either means
-the model is not complex enough (we could try increasing the hidden units or
-depth of encoder and decoder) or the problem requires more training examples.
-The training process could also be improved, e.g. with regularization
-techniques like dropout etc.
+work with division. But that's probably just a matter of tweaking the model or
+the training process.
 
 Feel free to pass on hints, ideas for improvement, or your own results in the
 comments or as issues on my [repository](https://github.com/cpury/lstm-math).
-
-
-[^1]: God complex? Me? That's why we're doing AI in the first place, isn't it?
