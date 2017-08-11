@@ -104,7 +104,7 @@ them. You can find a short tutorial
 [here](http://docs.python-guide.org/en/latest/dev/virtualenvs/). To get a
 virtualenv with Python 3, try `virtualenv -p python3 venv`.
 
-Once your virtualenv is up and running, install these requirements:
+Once your virtualenv is activated, install these requirements:
 
 ```
 pip install numpy tensorflow keras
