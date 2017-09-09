@@ -6,28 +6,26 @@ description: "Let's build a neural network that can do math. In Keras."
 excerpt: >
   Since ancient times, it has been known that machines excel at math while humans
   are pretty good at detecting cats in pictures. But with the advent of deep
-  learning, things have started to make less sense... (Updated 10 AUG 2017)
+  learning, the boundaries have started to blur... (Updated 10 AUG 2017)
 categories: machine-learning
 permalink: learning-math/
 tags: [machine-learning, recurrent-neural-networks, keras]
 disqus: true
 ---
 
-**Updated 10 AUG 2017:** I added a new section at the end in which I explore
-the mistakes made by the model.
 
 Since ancient times, it has been known that machines excel at math while humans
 are pretty good at detecting cats in pictures. But with the advent of deep
-learning, things have started to make less sense...
+learning, the boundaries have started to blur...
 
-Today we want to teach the machines to do math... Again! But instead of feeding
-them with optimized, known representations of numbers and calling hard-coded
+Today we want to teach the machines to do math - again! But instead of feeding
+them with optimized, known representations of numbers and calling hard-wired
 operations on them, we will feed in strings representing math formulas along
 with strings representing their results, character by character, and have the machine figure out how to interpret them and arrive at the results on its own.
 
 The resulting model is much more human: Not all results are exact, but they are
 close. It's more of an approximation than an exact calculation. As a 100%
-human, I surely can relate to almost-correct math, if anything.
+human myself, I surely can relate to almost-correct math, if anything.
 
 Today's post will be much more practical than usual, so if you want to build
 this at home, get your long-neglected Pythons out of their cages! You can find
@@ -46,14 +44,15 @@ and again
 summarize: RNNs are essentially building blocks of Neural Networks that not only
 look at the current input, but also remember the input before. LSTMs
 especially have a complex memory mechanism that can learn which parts of the
-data are important to remember, and which can be forgotten.
+data are important to remember, which can be ignored, and which can be
+forgotten.
 
 
 ### Sequence to Sequence Learning
 
 Sequence to sequence learning deals with problems in which a source sequence of
 inputs has to be mapped to a target sequence of outputs where each output
-is not necessarily directly depending on a single input. The classical
+is not necessarily directly dependent on a single input. The classical
 example is translation. How do you learn that a Chinese input phrase
 "他现在已经在路上了。" equals "She is on her way." in English?
 
@@ -69,9 +68,9 @@ as output.
 
 ### The setup
 
-Data is usually hard to come by, labeled data even more so. But math equations
-are cheap: They can be easily generated, and Python gives us their result
-simply by calling `eval(equation_string)`.
+For most problems, data is hard to come by. Labeled data even more so. But math
+equations are cheap: They can be easily generated, and Python gives us their
+result simply by calling `eval(equation_string)`.
 Starting with simple addition of small, natural numbers, we can easily generate
 a lot of equations along with their results and train a Seq2Seq model on it.
 
@@ -84,7 +83,7 @@ output = '118'
 Since we're learning on just a fraction of all possible formulas, the model
 can't just learn the results by heart. Instead, in order to generalize
 to all other equations, it really needs to "understand" what addition "means".
-This would include, among others:
+This could include, among others:
 * An equation consists of numbers and operations
 * Two numbers are added up digit-by-digit
 * If two digits add up to a value higher than 9, they carry over to the next
@@ -127,9 +126,9 @@ complex equations.
 
 To make sure we build each possible equation only once, we're going to use a
 generator. With the handy `itertools` Python standard package, we can generate
-all possible permutations of two numbers and then create a formula for each.
-Here's our basic code. Note that I'm referencing some global variables (IN
-ALL CAPS), we will define them later.
+all possible permutations of two numbers and then create a formula for each
+pair. Here's our basic code. Note that I'm referencing some global variables
+(IN ALL CAPS), we will define them later.
 
 {% highlight python %}
 import itertools
@@ -167,7 +166,7 @@ MIN_NUMBER = 0
 MAX_NUMBER = 999
 {% endhighlight %}
 
-... will generate us equations like this:
+... this will generate us equations like this:
 
 ```
 '89 + 7'
@@ -344,6 +343,11 @@ def print_example_predictions(count, model, x_test, y_test):
         ))
 {% endhighlight %}
 
+It is important to note here that the training data uses a max length for the
+input and output sequences only for numerical reasons. The model is not limited
+by that length and could look at or output longer sequences after this
+training.
+
 
 ### Building the model in Keras
 
@@ -370,7 +374,8 @@ output vector. This is done using Keras' `TimeDistributed` wrapper around a
 simple `Dense` layer.
 
 Since we expect something like a one-hot vector for each output character,
-we still need to apply `softmax` as usual in classification problems.
+we still need to apply `softmax` as usual in classification problems. This
+essentially yields us a probability distribution over the character classes.
 
 Note that from what I gathered, this way of building Seq2Seq models in Keras
 is not optimal and not exactly equivalent to what is proposed in the paper. It
@@ -467,9 +472,9 @@ if __name__ == '__main__':
 
 Finally, we need to fill in some of the global variables we used throughout
 the code. With two numbers from 0 to 999, there's 998k possible equations.
-Let's use about a sixteenth of that and use half of that for testing, meaning
-we'll train on ~31k data points and validate ~31k different data points. Here's
-my config:
+Let's use about a sixteenth of that for our data, and half of that for testing,
+meaning we'll train on ~31k data points and validate on ~31k different data
+points. Here's my config:
 
 {% highlight python %}
 MIN_NUMBER = 0
@@ -495,91 +500,23 @@ everything in a file `training.py` and run it via `python training.py`.
 ### Results
 
 Running the code as it is described here, I get to an accuracy of `0.98` on the
-test set after 50 epochs.
+test set after 50 epochs. The model stopped improving significantly around
+there, so I stopped training.
 
-Let's see how the training evolved:
-
-##### Before training
-
-```
-Validation loss:      2.566
-Validation accuracy:  0.041
-
-Example predictions:
-808 + 570 = 9990   (expected: 1378)
-25 + 941  = 3333   (expected:  966)
-230 + 331 = 2222   (expected:  561)
-502 + 799 = 1111   (expected: 1301)
-17 + 108  = 7777   (expected:  125)
-```
-
-As expected, the output is pretty random.
-
-##### Epoch 10
-
-```
-Validation loss:      1.249
-Validation accuracy:  0.520
-
-Example predictions:
-57 + 418  =  405   (expected:  475)
-817 + 492 = 1326   (expected: 1309)
-462 + 897 = 1321   (expected: 1359)
-807 + 604 = 1416   (expected: 1411)
-94 + 27   =   62   (expected:  121)
-```
-
-Wow, already got the basic idea of numbers and especially 3-digit vs 4-digit.
-
-##### Epoch 20
-
-```
-Validation loss:      0.450
-Validation accuracy:  0.840
-
-Example predictions:
-272 + 724 =  996   (expected:  996)
-531 + 906 = 1437   (expected: 1437)
-297 + 686 =  983   (expected:  983)
-58 + 645  =  713   (expected:  703)
-354 + 436 =  890   (expected:  790)
-```
-
-Almost there!
-
-##### Epoch 50
-
-```
-Validation loss:      0.060
-Validation accuracy:  0.979
-
-Example predictions:
-3 + 353   =  355   (expected:  356)
-502 + 816 = 1318   (expected: 1318)
-425 + 198 =  623   (expected:  623)
-932 + 99  = 1031   (expected: 1031)
-647 + 487 = 1134   (expected: 1134)
-```
-
-Validation accuracy stopped improving here, so I canceled the training.
-As you see, the results are basically perfect, though the accuracy of 98%
-means we're still doing some small mistakes from time to time.
+As you see, the results are close to perfect, though the accuracy of 98%
+means it's still not perfect...
 
 
-### Analyzing the errors
+### Analyzing the mistakes
 
 If you're impressed by that, you can stop reading now.
 
-If you see yourself
-flipping the table and crying "98%! That's way too low. This model couldn't
-even pass a fourth grade math test!". Well, I guess you're right. Sorry
-everyone, we failed to teach this machine how to math!
-
-But hey, this is ML. Usually these algorithms get applied to
-natural data, like images or audio etc. where small errors like this really
-don't matter at all. I agree though that it's a bummer that this seemingly
-simple, very systematic problem could not be solved completely. So let's have a
-look at what went wrong.
+If you're as disappointed as I am, let's take a closer look at the
+mistakes made by the model. Keep in mind though that the area where Deep
+Learning shines the most is natural data, like speech or images. In these
+fields, a bit of noise can be perfectly acceptable. This is math though, and
+it would be a nice proof of the power of LSTM models if we could learn
+something as exact as this.
 
 The first thing I notice while browsing the examples is that mistakes mostly
 happen with smaller numbers, e.g. with 2 or even only 1 digits.
@@ -592,7 +529,7 @@ E.g., I saw this mistake:
 ```
 
 Quite a human error to make. The representations are all correct, it simply
-made a mistake adding up the numbers! Cute for a machine, eh?
+made a mistake adding up the numbers! Cute for a machine, right?
 
 Anyway, since our equations only have two variables (the two numbers), we can
 nicely plot the equation space in a 2D pane. So I went ahead and created a
