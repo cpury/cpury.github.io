@@ -116,7 +116,7 @@ table { border-collapse: collapse; border-spacing: 0; }
 }
 
 /* Apply these base styles to all icons */
-[class^="icon-"]:before, [class*=" icon-"]:before {
+[class^="icon-"]::before, [class*=" icon-"]::before {
     font-family: "casper-icons", "Open Sans", sans-serif;
     speak: none;
     font-style: normal;
@@ -130,34 +130,34 @@ table { border-collapse: collapse; border-spacing: 0; }
 }
 
 /* Each icon is created by inserting the correct character into the
-   content of the :before pseudo element. Like a boss. */
-.icon-ghost:before {
+   content of the ::before pseudo element. Like a boss. */
+.icon-ghost::before {
     content: "\f600";
 }
-.icon-feed:before {
+.icon-feed::before {
     content: "\f601";
 }
-.icon-twitter:before {
+.icon-twitter::before {
     content: "\f602";
     font-size: 1.1em;
 }
-.icon-google-plus:before {
+.icon-google-plus::before {
     content: "\f603";
 }
-.icon-facebook:before {
+.icon-facebook::before {
     content: "\f604";
 }
-.icon-arrow-left:before {
+.icon-arrow-left::before {
     content: "\f605";
 }
-.icon-stats:before {
+.icon-stats::before {
     content: "\f606";
 }
-.icon-location:before {
+.icon-location::before {
     content: "\f607";
     margin-left: -3px; /* Tracking fix */
 }
-.icon-link:before {
+.icon-link::before {
     content: "\f608";
 }
 
@@ -315,7 +315,7 @@ blockquote small {
     color: #CCC;
 }
 
-blockquote small:before { content: "\2014 \00A0"; }
+blockquote small::before { content: "\2014 \00A0"; }
 
 blockquote cite {
     font-weight: 700;
@@ -436,12 +436,12 @@ margin on the iframe, cause it breaks stuff. */
    ========================================================================== */
 
 /* Clears shit */
-.clearfix:before,
-.clearfix:after {
+.clearfix::before,
+.clearfix::after {
     content: " ";
     display: table;
 }
-.clearfix:after { clear: both; }
+.clearfix::after { clear: both; }
 .clearfix { *zoom: 1; }
 
 /* Hides shit */
@@ -527,7 +527,7 @@ margin on the iframe, cause it breaks stuff. */
 
 /* Put a semi-opaque radial gradient behind the icon to make it more visible
    on photos which happen to have a light background. */
-.home-template .main-header:after {
+.home-template .main-header::after {
     display: block;
     content: " ";
     width: 150px;
@@ -545,9 +545,9 @@ margin on the iframe, cause it breaks stuff. */
 
 /* Hide when there's no cover image or on page2+ */
 .no-cover .scroll-down,
-.no-cover.main-header:after,
+.no-cover.main-header::after,
 .archive-template .scroll-down,
-.archive-template .main-header:after {
+.archive-template .main-header::after {
     display: none
 }
 
@@ -587,7 +587,7 @@ margin on the iframe, cause it breaks stuff. */
     background: rgba(0,0,0,0.1);
     transition: all ease 0.3s;
 }
-.back-button:before {
+.back-button::before {
     position: relative;
     bottom: -2px;
     font-size: 13px;
@@ -614,7 +614,7 @@ margin on the iframe, cause it breaks stuff. */
     background: rgba(0,0,0,0.1);
     transition: all ease 0.3s;
 }
-.subscribe-button:before {
+.subscribe-button::before {
     font-size: 9px;
     margin-right: 6px;
 }
@@ -729,7 +729,7 @@ margin on the iframe, cause it breaks stuff. */
 
 /* Add a little circle in the middle of the border-bottom on our .post
    just for the lolz and stylepoints. */
-.post:after {
+.post::after {
     display: block;
     content: "";
     width: 7px;
@@ -885,7 +885,7 @@ body:not(.post-template) .post-title {
 }
 
 /* Kill that stylish little circle that was on the border, too */
-.post-template .post:after {
+.post-template .post::after {
     display: none;
 }
 
@@ -997,7 +997,7 @@ body:not(.post-template) .post-title {
 }
 
 /* The RSS icon, inserted via icon font */
-.subscribe:before {
+.subscribe::before {
     color: #D2DEE3;
     font-size: 10px;
     position: absolute;
@@ -1013,7 +1013,7 @@ body:not(.post-template) .post-title {
     transition: box-shadow 0.25s;
 }
 
-.subscribe:hover:before {
+.subscribe:hover::before {
     color: #50585D;
 }
 
@@ -1037,7 +1037,7 @@ body:not(.post-template) .post-title {
 }
 
 /* The little chiclet arrow under the tooltip, pointing down */
-.tooltip:after {
+.tooltip::after {
     content: " ";
     border-width: 5px 5px 0 5px;
     border-style: solid;
@@ -1096,7 +1096,7 @@ body:not(.post-template) .post-title {
 }
 
 /* Add a little circle in the middle of the border-bottom */
-.author-profile:after {
+.author-profile::after {
     display: block;
     content: "";
     width: 7px;
@@ -1263,7 +1263,7 @@ body:not(.post-template) .post-title {
     display: none;
     border-bottom: #EBF2F6 1px solid;
 }
-.extra-pagination:after {
+.extra-pagination::after {
     display: block;
     content: "";
     width: 7px;
@@ -1362,7 +1362,7 @@ body:not(.post-template) .post-title {
     }
 
     .scroll-down,
-    .home-template .main-header:after { display: none; }
+    .home-template .main-header::after { display: none; }
 
     .archive-template .main-header {
         min-height: 180px;
@@ -1681,7 +1681,7 @@ body:not(.post-template) .post-title {
         line-height: 1.75em;
     }
 
-    .author-meta li:before {
+    .author-meta li::before {
         display: none;
     }
 
