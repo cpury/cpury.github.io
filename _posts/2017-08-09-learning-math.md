@@ -564,16 +564,15 @@ consistent one! The above equation would become `324 + 009`. The neural
 network has encountered many zeros throughout its lifetime, it knows how to
 deal with them. And here they are semantically the same as anywhere else.
 
-Running it with the zero-padding I've got it to 99.5% validation accuracy
-(proof: `006 + 051 = 0057 (expected: 0057)`), which I will consider good
-enough for today. Here's the updated plot, which is still not perfect but it
+Running it with the zero-padding I've got it to 99.5% validation accuracy.
+Here's the updated plot, which is still not perfect but it
 proves that I was mostly correct with my hypothesis:
 
 ![Scatter plot of errors in problem space with zero-padding]({{ site.url }}/assets/images/math_figure_2.png)
 
 #### Reversing the order
 
-Another way that would help out is to reverse all numbers. Then each number
+Another way that would help out is to reverse all number strings. Then each
 always starts with the 1s, then 10s, etc. So let's simply reverse all input and
 output strings and see what happens.
 
@@ -582,7 +581,8 @@ all other methods. But we're still doing mistakes:
 
 ![Scatter plot of errors in problem space with reversed order]({{ site.url }}/assets/images/math_figure_3.png)
 
-Seems like the network fails if the first number is 0... Interesting indeed.
+Seems like the network fails sometimes if the first number is 0... Interesting
+indeed.
 
 
 
