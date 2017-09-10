@@ -159,14 +159,8 @@ def generate_all_equations(shuffle=True, max_count=None):
         yield '{} + {}'.format(x, y)
 {% endhighlight %}
 
-Assuming these global config values ...
-
-{% highlight python %}
-MIN_NUMBER = 0
-MAX_NUMBER = 999
-{% endhighlight %}
-
-... this will generate us equations like this:
+Assuming global config values `MIN_NUMBER = 0` and `MAX_NUMBER = 999`,
+this code will generate us equations like these:
 
 ```
 '89 + 7'
@@ -544,6 +538,9 @@ the model? And let's not talk about the little red square where both numbers
 are below 100... Maybe there are not enough examples for this part of the
 problem space?
 
+Also, see the faint diagonal lines throughout the plot? We should have a look
+at those, too. I assume they might be related to a complex carryover.
+
 Well,
 I'm going to go out on a limb here. I think the way we as a culture notate
 decimal numbers is not very consistent in the lower bounds. E.g. most of the
@@ -557,27 +554,36 @@ You wish! We just skipped the digits for 100s and 10s and went straight to the
 last one without warning you!
 
 The neural network *could* of course learn how to deal with this madness, but
-the training set might just be too skewed towards the higher numbers. We could
-change our random sampling process to favor lower numbers, or use sample
-weights, but since in most natural problems we can't easily do that, I'd like
-to try and avoid it.
+the training set might just be too skewed towards the higher numbers.
+Let's think of different ways to help the model overcome this problem!
 
-Unless... Maybe if we pad numbers with zeros, the problem becomes a much more
+#### Padding with 0s
+
+Maybe if we pad numbers with zeros, the problem becomes a much more
 consistent one! The above equation would become `324 + 009`. The neural
 network has encountered many zeros throughout its lifetime, it knows how to
 deal with them. And here they are semantically the same as anywhere else.
 
-Alright, I know I just said we shouldn't mess with the sampling method. And
-now I'm proposing to change the decimal number system altogether. Did all this
-work in AI develop my God complex? Maybe. But that's why we're doing AI in the
-first place, isn't it? :)
-
-Ok, running it with the zero-padding I've got it to 99.5% validation accuracy
+Running it with the zero-padding I've got it to 99.5% validation accuracy
 (proof: `006 + 051 = 0057 (expected: 0057)`), which I will consider good
 enough for today. Here's the updated plot, which is still not perfect but it
 proves that I was mostly correct with my hypothesis:
 
 ![Scatter plot of errors in problem space with zero-padding]({{ site.url }}/assets/images/math_figure_2.png)
+
+#### Reversing the order
+
+Another way that would help out is to reverse all numbers. Then each number
+always starts with the 1s, then 10s, etc. So let's simply reverse all input and
+output strings and see what happens.
+
+Using this technique, I get to 99.95% validation accuracy, a serious boost over
+all other methods. But we're still doing mistakes:
+
+![Scatter plot of errors in problem space with reversed order]({{ site.url }}/assets/images/math_figure_3.png)
+
+Seems like the network fails if the first number is 0... Interesting indeed.
+
 
 
 ### Further Experiments
