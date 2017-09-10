@@ -497,7 +497,7 @@ Running the code as it is described here, I get to an accuracy of `0.98` on the
 test set after 50 epochs. The model stopped improving significantly around
 there, so I stopped training.
 
-As you see, the results are close to perfect, though the accuracy of 98%
+As you see, the results are pretty good, though the accuracy of 98%
 means it's still not perfect...
 
 
@@ -582,7 +582,8 @@ all other methods. But we're still doing mistakes:
 ![Scatter plot of errors in problem space with reversed order]({{ site.url }}/assets/images/math_figure_3.png)
 
 Seems like the network fails sometimes if the first number is 0... Interesting
-indeed.
+indeed. I'll leave it here though so that you have some room to explore other
+options with me :)
 
 
 
