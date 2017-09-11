@@ -60,10 +60,9 @@ Even with RNNs it's not directly obvious how to do this. Well, it wasn't until
 Google published their paper
 ["Sequence to Sequence Learning with Neural Networks"](https://arxiv.org/abs/1409.3215)
 (Seq2Seq) in 2014. The idea is to train a joint encoder-decoder model.
-First, an encoder based on RNNs learns an abstract, (ideally)
-language-independent representation. Then a decoder also based on RNNs learns
-to decode it to another language, generating a new sequence from the encoding
-as output.
+First, an encoder based on RNNs learns an abstract representation. Then a
+decoder also based on RNNs learns to decode it to another language, generating
+a new sequence from the encoding as output.
 
 
 ### The setup
@@ -189,11 +188,11 @@ code I used for this:
 {% highlight python %}
 import numpy as np
 
+CHARS = [str(n) for n in range(10)] + ['+', ' ']
+CHAR_TO_INDEX = {i: c for c, i in enumerate(CHARS)}
+INDEX_TO_CHAR = {c: i for c, i in enumerate(CHARS)}
+
 def one_hot(index, length):
-    """
-    Generates a one-hot vector of the given length that's 1.0 at the given
-    index.
-    """
     assert index < length
 
     array = np.zeros(length)
@@ -201,69 +200,61 @@ def one_hot(index, length):
 
     return array
 
-
-def char_to_one_hot_index(char):
-    """
-    Given a char, encodes it as an integer to be used in a one-hot vector.
-    Will only work with digits, dots and +-signs, everything else
-    (including spaces) will be mapped to a single value.
-    """
-    if char.isdigit():
-        return int(char)
-    elif char == '+':
-        return 10
-    else:
-        return 11
-
-
 def char_to_one_hot(char):
-    """
-    Given a char, encodes it as a one-hot vector based on the encoding above.
-    """
-    return one_hot(char_to_one_hot_index(char), 13)
+    return one_hot(CHAR_TO_INDEX[char], 13)
 
+def one_hot_to_index(vector):
+    if not np.any(vector):
+        return -1
 
-def one_hot_index_to_char(index):
-    """
-    Given an index, returns the character encoded with that index.
-    Will only work with encoded digits, dots or +, everything else will
-    return the space character.
-    """
-    if index <= 9:
-        return str(index)
-
-    if index == 10:
-        return '+'
-
-    return ' '
-
+    return np.argmax(vector)
 
 def one_hot_to_char(vector):
-    """
-    Given a one-hot vector, returns the encoded char.
-    Also works with softmax output vectors by choosing the class with the
-    highest predicted probability.
-    """
-    return one_hot_index_to_char(np.argmax(vector))
+    index = one_hot_to_index(vector)
+    if index == -1:
+        return ''
 
+    return INDEX_TO_CHAR[index]
 
 def one_hot_to_string(matrix):
-    """
-    Given a matrix of single one-hot encoded char vectors, returns the
-    encoded string.
-    Also works with softmax output vectors by choosing the class with the
-    highest predicted probability.
-    """
     return ''.join(one_hot_to_char(vector) for vector in matrix)
 {% endhighlight %}
 
 With these helper functions, it is quite easy to generate the dataset:
 
 {% highlight python %}
+def equations_to_x_y(equations, n):
+    """
+    Given a list of equations, converts them to one-hot vectors to build
+    two data matrixes x and y.
+    """
+    x = np.zeros(
+        (n, MAX_EQUATION_LENGTH, N_FEATURES), dtype=np.bool
+    )
+    y = np.zeros(
+        (n, MAX_RESULT_LENGTH, N_FEATURES), dtype=np.bool
+    )
+
+    # Get the first n_test equations and convert to test vectors
+    for i, equation in enumerate(itertools.islice(equations, n)):
+        result = str(eval(equation))
+
+        # Pad the result with spaces
+        result = ' ' * (MAX_RESULT_LENGTH - 1 - len(result)) + result
+
+        for t, char in enumerate(equation):
+            x[i, t, CHAR_TO_INDEX[char]] = 1
+
+        for t, char in enumerate(result):
+            y[i, t, CHAR_TO_INDEX[char]] = 1
+
+    return x, y
+
+
 def build_dataset():
     """
-    Builds a dataset based on the global config.
-    Returns (x_test, y_test, x_train, y_train).
+    Generates equations based on global config, splits them into train and test
+    sets, and returns (x_test, y_test, x_train, y_train).
     """
     generator = generate_all_equations(max_count=N_EXAMPLES)
 
@@ -271,42 +262,8 @@ def build_dataset():
     n_test = round(SPLIT * N_EXAMPLES)
     n_train = N_EXAMPLES - n_test
 
-    x_test = np.zeros(
-        (n_test, MAX_EQUATION_LENGTH, N_FEATURES), dtype=np.bool
-    )
-    y_test = np.zeros(
-        (n_test, MAX_RESULT_LENGTH, N_FEATURES), dtype=np.bool
-    )
-
-    # Get the first n_test equations and convert to test vectors
-    for i, equation in enumerate(itertools.islice(generator, n_test)):
-        result = str(eval(equation))
-        # Pad the result with spaces
-        result = ' ' * (MAX_RESULT_LENGTH - len(result)) + result
-
-        for t, char in enumerate(equation):
-            x_test[i, t, char_to_one_hot_index(char)] = 1
-
-        for t, char in enumerate(result):
-            y_test[i, t, char_to_one_hot_index(char)] = 1
-
-    x_train = np.zeros(
-        (n_train, MAX_EQUATION_LENGTH, N_FEATURES), dtype=np.bool
-    )
-    y_train = np.zeros(
-        (n_train, MAX_RESULT_LENGTH, N_FEATURES), dtype=np.bool
-    )
-
-    # The rest will go to the train set
-    for i, equation in enumerate(generator):
-        result = str(eval(equation))
-        result = ' ' * (MAX_RESULT_LENGTH - len(result)) + result
-
-        for t, char in enumerate(equation):
-            x_train[i, t, char_to_one_hot_index(char)] = 1
-
-        for t, char in enumerate(result):
-            y_train[i, t, char_to_one_hot_index(char)] = 1
+    x_test, y_test = equations_to_x_y(generator, n_test)
+    x_train, y_train = equations_to_x_y(generator, n_train)
 
     return x_test, y_test, x_train, y_train
 {% endhighlight %}
@@ -467,7 +424,7 @@ if __name__ == '__main__':
 Finally, we need to fill in some of the global variables we used throughout
 the code. With two numbers from 0 to 999, there's 998k possible equations.
 Let's use about a sixteenth of that for our data, and half of that for testing,
-meaning we'll train on ~31k data points and validate on ~31k different data
+meaning we'll train on ~ 31k data points and validate on ~ 31k different data
 points. Here's my config:
 
 {% highlight python %}
@@ -477,7 +434,7 @@ MAX_NUMBER = 999
 MAX_N_EXAMPLES = (MAX_NUMBER - MIN_NUMBER) ** 2
 N_EXAMPLES = int(round(MAX_N_EXAMPLES / 16.))
 N_FEATURES = 12
-MAX_NUMBER_LENGTH_LEFT_SIDE = max(len(str(MAX_NUMBER)), len(str(MIN_NUMBER)))
+MAX_NUMBER_LENGTH_LEFT_SIDE = len(str(MAX_NUMBER))
 MAX_NUMBER_LENGTH_RIGHT_SIDE = MAX_NUMBER_LENGTH_LEFT_SIDE + 1
 MAX_EQUATION_LENGTH = (MAX_NUMBER_LENGTH_LEFT_SIDE * 2) + 3
 MAX_RESULT_LENGTH = MAX_NUMBER_LENGTH_RIGHT_SIDE
