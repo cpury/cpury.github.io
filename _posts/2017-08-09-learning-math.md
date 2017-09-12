@@ -6,12 +6,14 @@ description: "Let's build a neural network that can do math. In Keras."
 excerpt: >
   Since ancient times, it has been known that machines excel at math while humans
   are pretty good at detecting cats in pictures. But with the advent of deep
-  learning, the boundaries have started to blur... (Updated 10 AUG 2017)
+  learning, the boundaries have started to blur... (Updated 12 SEP 2017)
 categories: machine-learning
 permalink: learning-math/
 tags: [machine-learning, recurrent-neural-networks, keras]
 disqus: true
 ---
+
+**Updated 12 SEPT 2017:** Improved the training procedure and rewrote parts of post
 
 
 Since ancient times, it has been known that machines excel at math while humans
@@ -133,7 +135,7 @@ pair. Here's our basic code. Note that I'm referencing some global variables
 import itertools
 import random
 
-def generate_all_equations(shuffle=True, max_count=None):
+def generate_equations(shuffle=True, max_count=None):
     """
     Generates all possible math equations given the global configuration.
     If max_count is given, returns that many at most. If shuffle is True,
@@ -194,17 +196,6 @@ CHARS = [str(n) for n in range(10)] + ['+', ' ', '\0']
 CHAR_TO_INDEX = {i: c for c, i in enumerate(CHARS)}
 INDEX_TO_CHAR = {c: i for c, i in enumerate(CHARS)}
 
-def one_hot(index, length):
-    assert index < length
-
-    array = np.zeros(length)
-    array[index] = 1.
-
-    return array
-
-def char_to_one_hot(char):
-    return one_hot(CHAR_TO_INDEX[char], 13)
-
 def one_hot_to_index(vector):
     if not np.any(vector):
         return -1
@@ -262,7 +253,7 @@ def build_dataset():
     Generates equations based on global config, splits them into train and test
     sets, and returns (x_test, y_test, x_train, y_train).
     """
-    generator = generate_all_equations(max_count=N_EXAMPLES)
+    generator = generate_equations(max_count=N_EXAMPLES)
 
     # Split into training and test set based on SPLIT:
     n_test = round(SPLIT * N_EXAMPLES)
@@ -381,11 +372,13 @@ def build_model():
 
 ### Training
 
-Training is easy. I'll run batches of 10 epochs and then print out some
-example predictions. Here's the main function of our code:
+Training is easy. We just call the fit function of the model, passing handy
+callbacks like the `ModelCheckpoint`, which stores the best model after each
+epoch. Here's the main function of our code:
 
 {% highlight python %}
 from time import sleep
+from keras.callbacks import EarlyStopping, ModelCheckpoint
 
 def main():
     model = build_model()
@@ -400,30 +393,24 @@ def main():
     print_example_predictions(5, model, x_test, y_test)
     print()
 
-    try:
-        for iteration in range(int(EPOCHS / 10)):
-            print()
-            print('-' * 50)
-            print('Iteration', iteration)
-            model.fit(
-                x_train, y_train,
-                epochs=10,
-                batch_size=BATCH_SIZE,
-                validation_data=(x_test, y_test),
-            )
-            sleep(0.01)
+    model.fit(
+        x_train, y_train,
+        epochs=EPOCHS,
+        batch_size=BATCH_SIZE,
+        validation_data=(x_test, y_test),
+        callbacks=[
+            EarlyStopping(
+                patience=20,
+            ),
+            ModelCheckpoint(
+                'model.h5',
+                save_best_only=True,
+            ),
+        ]
+    )
+    sleep(0.01)
 
-            print()
-            print_example_predictions(5, model, x_test, y_test)
-            print()
-
-    except KeyboardInterrupt:
-        print(' Got Sigint')
-    finally:
-        sleep(0.01)
-        model.save('model.h5')
-
-        print_example_predictions(20, model, x_test, y_test)
+    print_example_predictions(20, model, x_test, y_test)
 
 
 if __name__ == '__main__':
@@ -431,10 +418,11 @@ if __name__ == '__main__':
 {% endhighlight %}
 
 Finally, we need to fill in some of the global variables we used throughout
-the code. With two numbers from 0 to 999, there's 998k possible equations.
-Let's use about a sixteenth of that for our data, and half of that for testing,
-meaning we'll train on ~ 31k data points and validate on ~ 31k different data
-points. Here's my config:
+the code. With equations using two numbers from 0 to 999, there's 998k possible
+data points.
+Let's use about a sixteenth of that for our data, and a quarter of that for
+testing, meaning we'll train on ~ 50k data points and validate on ~ 14k
+different data points. Here's my config:
 
 {% highlight python %}
 MIN_NUMBER = 0
@@ -448,9 +436,9 @@ MAX_NUMBER_LENGTH_RIGHT_SIDE = MAX_NUMBER_LENGTH_LEFT_SIDE + 1
 MAX_EQUATION_LENGTH = (MAX_NUMBER_LENGTH_LEFT_SIDE * 2) + 4
 MAX_RESULT_LENGTH = MAX_NUMBER_LENGTH_RIGHT_SIDE + 1
 
-SPLIT = .5
-EPOCHS = 800
-BATCH_SIZE = 128
+SPLIT = .25
+EPOCHS = 100
+BATCH_SIZE = 64
 {% endhighlight %}
 
 Finally, we can start training. Either call `main()` from the shell, or store
@@ -459,108 +447,64 @@ everything in a file `training.py` and run it via `python training.py`.
 
 ### Results
 
-Running the code as it is described here, I get to an accuracy of `0.98` on the
-test set after 50 epochs. The model stopped improving significantly around
-there, so I stopped training.
+Running the code as it is described here, with some patience I get to a test
+accuracy of `0.999` on the test set after about 60 epochs:
 
-As you see, the results are pretty good, though the accuracy of 98%
-means it's still not perfect...
+![Plot showing convergence of loss and accuracy over training time]({{ site.url }}/assets/images/math_figure_5.png)
+
+That's great, but still not perfect! Did our model not generalize to all areas
+of the problem space?
 
 
 ### Analyzing the mistakes
 
-If you're impressed by that, you can stop reading now.
+Let me preface this by saying that the problems in which Deep Learning really
+shines are all concerned with "natural" data, like speech or images. In these
+fields, a bit of noise can be perfectly acceptable, the same way that humans
+do not achieve a perfect performance in anything (sorry). This is math though,
+and it would be a nice proof of the power of LSTM models if we could learn
+something that requires 100% exactness.
 
-If you're as disappointed as I am, let's take a closer look at the
-mistakes made by the model. Keep in mind though that the area where Deep
-Learning shines the most is natural data, like speech or images. In these
-fields, a bit of noise can be perfectly acceptable. This is math though, and
-it would be a nice proof of the power of LSTM models if we could learn
-something as exact as this.
+So, let's browse some of the examples where the model failed to give a correct
+answer. I see some interesting ones where we get correct representations but
+small errors in the space of numbers, e.g. `800 + 890 = 1689 (expected: 1690)`.
+It seems like the network did not follow the strategy of adding up number by
+number as I (a biased human) expected, but rather goes for a more
+"instinctive" adding up.
 
-The first thing I notice while browsing the examples is that mistakes mostly
-happen with smaller numbers, e.g. with 2 or even only 1 digits.
-It is very interesting to note that the mistakes that happen are *small errors*
-in the *space of decimal numbers*, not random errors in the *space of strings*!
-E.g., I saw this mistake:
+Even more interesting are the failures where things seem to have gone
+completely off the hook: `978 + 20 = 008 (expected: 998)`. What happened here?
+It seems that part of the model thought the result should be `1008`, while
+another part thought it should be `998`. It's almost as if each position in
+the output sequence follows its own stubborn logic, not really caring if the
+number as a whole makes any sense. This is probably a weakness of LSTMs with
+these kinds of problems and would require some research to solve.
 
-```
-32 + 167  = 200    (expected:  199)
-```
-
-Quite a human error to make. The representations are all correct, it simply
-made a mistake adding up the numbers! Cute for a machine, right?
-
-Anyway, since our equations only have two variables (the two numbers), we can
-nicely plot the equation space in a 2D pane. So I went ahead and created a
-scatter plot with green dots marking correct predictions and red dots marking
-incorrect ones. Find the code for that
+Anyway, since our input space has only two factors of variation (the two
+numbers that go into building the equation), we can plot the equation space in
+a 2D pane. So I went ahead and created a scatter plot with green dots marking
+correct predictions and red dots marking incorrect ones. Find the code for that
 [here](https://github.com/cpury/lstm-math/blob/master/plot.py).
 
-![Scatter plot of errors in problem space]({{ site.url }}/assets/images/math_figure_1.png)
+![Scatter plot of errors in problem space]({{ site.url }}/assets/images/math_figure_4.png)
 
-Wow, see how numbers below 100 and especially below 10 are really messing with
-the model? And let's not talk about the little red square where both numbers
-are below 100... Maybe there are not enough examples for this part of the
-problem space?
+It seems errors appear mostly in the lower bounds, where one of the numbers is
+below 100 or even below 10. Here, the rules of adding up numbers change a little
+bit (the first digit no longer counts the 100s). To increase the trouble, this
+problematic space has less training examples than the easier parts.
 
-Also, see the faint diagonal lines throughout the plot? We should have a look
-at those, too. I assume they might be related to a complex carryover.
-
-Well,
-I'm going to go out on a limb here. I think the way we as a culture notate
-decimal numbers is not very consistent in the lower bounds. E.g. most of the
-training examples look like `324 + 123` where each digit can simply be added in
-a very systematic fashion. This can't be directly extended to e.g. `324 + 9`,
-since `9` doesn't really follow the order of digits the model has come to expect.
-Imagine you only knew numbers with three digits and now you came across the
-*number* `9`. Reading character by character, when you see the first *digit*
-`9` you would naturally assume "Ah, this means nine-hundred and something".
-You wish! We just skipped the digits for 100s and 10s and went straight to the
-last one without warning you!
-
-The neural network *could* of course learn how to deal with this madness, but
-the training set might just be too skewed towards the higher numbers.
-Let's think of different ways to help the model overcome this problem!
-
-#### Padding with 0s
-
-Maybe if we pad numbers with zeros, the problem becomes a much more
-consistent one! The above equation would become `324 + 009`. The neural
-network has encountered many zeros throughout its lifetime, it knows how to
-deal with them. And here they are semantically the same as anywhere else.
-
-Running it with the zero-padding I've got it to 99.5% validation accuracy.
-Here's the updated plot, which is still not perfect but it
-proves that I was mostly correct with my hypothesis:
-
-![Scatter plot of errors in problem space with zero-padding]({{ site.url }}/assets/images/math_figure_2.png)
-
-#### Reversing the order
-
-Another way that would help out is to reverse all number strings. Then each
-always starts with the 1s, then 10s, etc. So let's simply reverse all input and
-output strings and see what happens.
-
-Using this technique, I get to 99.95% validation accuracy, a serious boost over
-all other methods. But we're still doing mistakes:
-
-![Scatter plot of errors in problem space with reversed order]({{ site.url }}/assets/images/math_figure_3.png)
-
-Seems like the network fails sometimes if the first number is 0... Interesting
-indeed. I'll leave it here though so that you have some room to explore other
-options with me :)
-
+We might solve this problem by introducing sample weights or reversing the
+strings (so that the order of digits in numbers is more deterministic). I'll
+leave it up to you to work on this!
 
 
 ### Further Experiments
 
-There's lots to do! You could try out other ways of getting over this
-lower-number problem, like sample weights, etc. We can also
-increase the complexity of the equations. I was able to get quite far on ones
-as complex as `131 + 83 - 744 * 33 (= -24338)`, but haven't really gotten it to
-work with division. But that's probably just a matter of tweaking the model or
-the training process.
+There's lots to do! You can get creative about getting over this lower-number
+problem. We can also increase the complexity of the equations. I was able to get
+quite far on ones as complex as `131 + 83 - 744 * 33 (= -24338)`, but haven't
+really gotten it to work with division. But that's probably just a matter of
+tweaking the model or the training process.
 
 Feel free to pass on hints, ideas for improvement, or your own results in the
 comments or as issues on my [repository](https://github.com/cpury/lstm-math).
