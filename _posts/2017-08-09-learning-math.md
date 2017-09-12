@@ -178,7 +178,9 @@ That was easy, right?
 Remember we want to look at the strings as sequences. The RNN will not see the
 input string as a whole, but one character after the other. It will then have
 to learn to remember the important parts in its internal state. That means we
-need to convert each input and output string into vectors first.
+need to convert each input and output string into vectors first. Let's also
+add an "end" character to each sequence so the neural network can learn when
+a sequence is finished. I'm using the (invisible) '\0' character here.
 
 We do this by encoding each character as a one-hot vector. Each string is then
 simply a matrix of these character-vectors. The way we encode is quite
@@ -188,7 +190,7 @@ code I used for this:
 {% highlight python %}
 import numpy as np
 
-CHARS = [str(n) for n in range(10)] + ['+', ' ']
+CHARS = [str(n) for n in range(10)] + ['+', ' ', '\0']
 CHAR_TO_INDEX = {i: c for c, i in enumerate(CHARS)}
 INDEX_TO_CHAR = {c: i for c, i in enumerate(CHARS)}
 
@@ -241,6 +243,10 @@ def equations_to_x_y(equations, n):
 
         # Pad the result with spaces
         result = ' ' * (MAX_RESULT_LENGTH - 1 - len(result)) + result
+
+        # We end each sequence in a sequence-end-character:
+        equation += '\0'
+        result += '\0'
 
         for t, char in enumerate(equation):
             x[i, t, CHAR_TO_INDEX[char]] = 1
@@ -436,11 +442,11 @@ MAX_NUMBER = 999
 
 MAX_N_EXAMPLES = (MAX_NUMBER - MIN_NUMBER) ** 2
 N_EXAMPLES = int(round(MAX_N_EXAMPLES / 16.))
-N_FEATURES = 12
+N_FEATURES = len(CHARS)
 MAX_NUMBER_LENGTH_LEFT_SIDE = len(str(MAX_NUMBER))
 MAX_NUMBER_LENGTH_RIGHT_SIDE = MAX_NUMBER_LENGTH_LEFT_SIDE + 1
-MAX_EQUATION_LENGTH = (MAX_NUMBER_LENGTH_LEFT_SIDE * 2) + 3
-MAX_RESULT_LENGTH = MAX_NUMBER_LENGTH_RIGHT_SIDE
+MAX_EQUATION_LENGTH = (MAX_NUMBER_LENGTH_LEFT_SIDE * 2) + 4
+MAX_RESULT_LENGTH = MAX_NUMBER_LENGTH_RIGHT_SIDE + 1
 
 SPLIT = .5
 EPOCHS = 800
