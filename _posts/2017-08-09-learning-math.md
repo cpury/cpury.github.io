@@ -308,7 +308,8 @@ First, we need to decide what the shape of our inputs is supposed to be. Since
 it's a matrix with a one-hot-vector for each position in the equation string,
 this is simply `(MAX_EQUATION_LENGTH, N_FEATURES)`. We'll pass that input to a
 first layer consisting of 256 LSTM cells. Each will look at the input,
-character by character, and output a single value.
+character by character, and output a single value. We also add some light
+dropout for regularization.
 
 Now, ideally we'd use the activation of each LSTM for each of the sequence
 items and then use them as inputs to our decoder. It seems Keras is having
@@ -337,7 +338,7 @@ Either way, here is our code:
 
 {% highlight python %}
 from keras.models import Sequential
-from keras.layers import LSTM, RepeatVector, Dense, Activation
+from keras.layers import LSTM, RepeatVector, Dense, Dropout, Activation
 from keras.layers.wrappers import TimeDistributed
 
 def build_model():
@@ -350,12 +351,14 @@ def build_model():
 
     # Encoder:
     model.add(LSTM(256, input_shape=input_shape))
+    model.add(Dropout(0.25))
 
     # The RepeatVector-layer repeats the input n times
     model.add(RepeatVector(MAX_RESULT_LENGTH))
 
     # Decoder:
     model.add(LSTM(256, return_sequences=True))
+    model.add(Dropout(0.25))
 
     model.add(TimeDistributed(Dense(N_FEATURES)))
     model.add(Activation('softmax'))
