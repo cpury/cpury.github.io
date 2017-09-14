@@ -49,7 +49,7 @@
       .remark-code, .remark-inline-code {
         font-family: 'Ubuntu Mono';
         text-align: left;
-        font-size: 17px;
+        font-size: 18px;
         line-height: .5;
       }
       a:visited {
@@ -210,8 +210,11 @@ class: center
 # Getting the results
 
 ```python
->>> eval('1 + 2')
-3
+>>> equation = next(generate_equations())
+>>> equation
+'965 + 840'
+>>> eval(equation)
+1805
 ```
 
 ???
