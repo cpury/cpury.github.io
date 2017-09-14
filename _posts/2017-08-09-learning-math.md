@@ -67,7 +67,7 @@ decoder also based on RNNs learns to decode it to another language, generating
 a new sequence from the encoding as output.
 
 
-### The setup
+### The Setup
 
 For most problems, data is hard to come by. Labeled data even more so. But math
 equations are cheap: They can be easily generated, and Python gives us their
@@ -95,7 +95,7 @@ This could include, among others:
 And this just for additions! If we add more operations, or mix them, the
 network needs to grog even more rules like this.
 
-### Setting up your environment
+### Setting up your Environment
 
 If you're doing this from scratch, you will want to work in a new virtualenv.
 I also recommend using Python 3, because it's really time we got over Python
@@ -117,7 +117,7 @@ Great! You can paste the code below into a Python shell, or store it in a file,
 it's up to you.
 
 
-### Generating math formulas as strings
+### Generating Math Formulas as Strings
 
 For now, let's build some equations! We're going to go real simple here and
 just work with easy-peasy addition of two small natural numbers. Once we get
@@ -175,7 +175,7 @@ For any of these equation strings, we can easily get the result in Python using
 That was easy, right?
 
 
-### Encoding strings for Neural Networks
+### Encoding Strings for Neural Networks
 
 Remember we want to look at the strings as sequences. The RNN will not see the
 input string as a whole, but one character after the other. It will then have
@@ -297,7 +297,7 @@ by that length and could look at or output longer sequences after this
 training.
 
 
-### Building the model in Keras
+### Building the Model in Keras
 
 Now, let's build the model. Thanks to Keras, this is quite straightforward.
 
@@ -456,7 +456,7 @@ That's great, but still not perfect! Did our model not generalize to all areas
 of the problem space?
 
 
-### Analyzing the mistakes
+### Analyzing the Mistakes
 
 Let me preface this by saying that the problems in which Deep Learning really
 shines are all concerned with "natural" data, like speech or images. In these
@@ -478,7 +478,7 @@ It seems that part of the model thought the result should be `1008`, while
 another part thought it should be `998`. It's almost as if each position in
 the output sequence follows its own stubborn logic, not really caring if the
 number as a whole makes any sense. This is probably a weakness of LSTMs with
-these kinds of problems and would require some research to solve.
+these kinds of data and would require some research to solve.
 
 Anyway, since our input space has only two factors of variation (the two
 numbers that go into building the equation), we can plot the equation space in

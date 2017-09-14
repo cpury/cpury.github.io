@@ -63,7 +63,7 @@
 name: title
 class: center, middle
 
-# "Teach a Neural Network how to Math"
+# Teach a Neural Network<br />How to Math
 
 ???
 Hi everybody and welcome to my presentation "Teach a nn how to math". This is
@@ -317,7 +317,7 @@ def build_model():
     """
     Builds and returns the model based on the global config.
     """
-    input_shape = (3 + 3 + 2 + 1, len(CHARS))
+    input_shape = (9, len(CHARS))
 
     model = Sequential()
     model.add(LSTM(256, input_shape=input_shape))
@@ -390,6 +390,9 @@ After we built the model, all we need to do is train it.
 A quick note on the dataset: It is very important to retain some of the
 available data as a "test" or "validation" set. The model is not allowed to
 train on this data, but is periodically checkd how well it fares on.
+
+Also, as a note, I only took about 5% of the all possible equations for
+training, so it's really not just learning by heart but has to grog the idea.
 
 So basically, this makes sure the model does not simply learn the training
 examples by heart, but learns to generalize to other, unseen cases.
@@ -475,6 +478,8 @@ are below 100 or even 10.
 
 This could be analyzed and improved on, but that is out of the scope here.
 
+SHOW EXAMPLE MODEL
+
 
 ---
 
@@ -489,7 +494,6 @@ Name: end
 * Intro to ML: https://www.coursera.org/learn/machine-learning
 * Intro to DL: https://www.coursera.org/learn/neural-networks-deep-learning
 * Keras framework: https://keras.io/
-* ML competitions: https://www.kaggle.com/competitions
 ]
 
 ???
@@ -505,12 +509,6 @@ I can recommend these two Coursera courses to get you started.
 Or if you want to jump straight to the practical parts, check out Keras, an
 amazing Python framework that abstracts away a lot of the complicated parts
 so you can focus on building models. There are tonnes of tutorials for Keras.
-
-And if you're looking for cool problems to solve, I recommend you check out
-Kaggle, which is something like a data competition market place with lots of
-datasets and tutorials and also the possibility to get large sums of prize
-money. If you end up winning something because of stuff you learned on this
-talk today, I will gladly accept 10% of the prize.
 
 
 
