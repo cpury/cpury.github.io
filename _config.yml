@@ -15,7 +15,7 @@ google_analytics: UA-63484688-1
 gems: [jekyll-paginate]
 
 # Details for the RSS feed generator
-url: https://cpury.github.io/
+url: https://cpury.github.io
 author: Max Schumacher
 
 social:
