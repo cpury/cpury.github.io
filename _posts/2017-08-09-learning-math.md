@@ -6,7 +6,7 @@ description: "Let's build a neural network that can do math. In Keras."
 excerpt: >
   Since ancient times, it has been known that machines excel at math while humans
   are pretty good at detecting cats in pictures. But with the advent of deep
-  learning, the boundaries have started to blur... (Updated 12 SEP 2017)
+  learning, the boundaries have started to blur... (Updated 9 DEC 2017)
 categories: machine-learning
 permalink: learning-math/
 tags: [machine-learning, recurrent-neural-networks, keras]
