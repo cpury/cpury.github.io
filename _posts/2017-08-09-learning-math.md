@@ -13,7 +13,7 @@ tags: [machine-learning, recurrent-neural-networks, keras]
 disqus: true
 ---
 
-**Updated 12 SEPT 2017:** Improved the training procedure and rewrote parts of post
+**Updated 8 DEC 2017:** Improved the model and rewrote some parts
 
 
 Since ancient times, it has been known that machines excel at math while humans
@@ -67,6 +67,16 @@ decoder also based on RNNs learns to decode it to another language, generating
 a new sequence from the encoding as output.
 
 
+### Bidirectional RNNs
+
+It turns out RNNs work much better if we let them look into the future as well.
+For this purpose, so-called bi-directional RNNs were invented. Each bi-directional
+RNN consists of two RNNs: One that looks at the sequence from start
+to end, and one that looks at it in reverse. At each part of the sequence we thus
+have information about what came before and what will come after.
+That way, a RNNs can better learn about the context of each segment.
+
+
 ### The Setup
 
 For most problems, data is hard to come by. Labeled data even more so. But math
@@ -77,8 +87,8 @@ a lot of equations along with their results and train a Seq2Seq model on it.
 
 For example, a typical datapoint for addition could look like this:
 ```
-input = '31 + 87'
-output = '118'
+input: '31 + 87'
+output: '118'
 ```
 
 Since we're learning on just a fraction of all possible formulas, the model
@@ -120,7 +130,7 @@ it's up to you.
 ### Generating Math Formulas as Strings
 
 For now, let's build some equations! We're going to go real simple here and
-just work with easy-peasy addition of two small natural numbers. Once we get
+just work with easy-peasy addition of two natural numbers. Once we get
 that to work, we can build more funky stuff later on. See the
 [full code](https://github.com/cpury/lstm-math) to find out how to build more
 complex equations.
@@ -308,19 +318,20 @@ first layer consisting of 256 LSTM cells. Each will look at the input,
 character by character, and output a single value. We also add some light
 dropout for regularization.
 
-Now, ideally we'd use the activation of each LSTM for each of the sequence
+Now, ideally we'd use the activation of each LSTM on each of the sequence
 items and then use them as inputs to our decoder. It seems Keras is having
 a hard time with this, so the accepted workaround is to let the LSTM cells
-output single values each, and then repeat these vectors using `RepeatVector`
-to feed the decoder network. There's an issue on Keras discussing this
+output single values each after going through the whole input, and then repeat
+these vectors using `RepeatVector` to feed the decoder network. There's an
+issue on Keras discussing this
 [here](https://github.com/fchollet/keras/issues/5203).
 
 So after we repeat the encoded vector `n` times with `n` being the (maximum)
 length of our output sequences, we run this repeat-sequence through the
-decoder: An LSTM layer that will output sequences of vectors. Finally, we want
-to combine each LSTM cell's output at each point in the sequence to a single
-output vector. This is done using Keras' `TimeDistributed` wrapper around a
-simple `Dense` layer.
+decoder: A (bidirectional) LSTM layer that will output sequences of vectors.
+Finally, we want to combine each LSTM cell's output at each point in the
+sequence to a single output vector. This is done using Keras' `TimeDistributed`
+wrapper around a simple `Dense` layer.
 
 Since we expect something like a one-hot vector for each output character,
 we still need to apply `softmax` as usual in classification problems. This
@@ -335,8 +346,10 @@ Either way, here is our code:
 
 {% highlight python %}
 from keras.models import Sequential
-from keras.layers import LSTM, RepeatVector, Dense, Dropout, Activation
-from keras.layers.wrappers import TimeDistributed
+from keras.layers import LSTM, RepeatVector, Dense, Activation
+from keras.layers.wrappers import TimeDistributed, Bidirectional
+from keras.layers.normalization import BatchNormalization
+from keras.optimizers import Adam
 
 def build_model():
     """
@@ -347,22 +360,22 @@ def build_model():
     model = Sequential()
 
     # Encoder:
-    model.add(LSTM(256, input_shape=input_shape))
-    model.add(Dropout(0.25))
+    model.add(Bidirectional(LSTM(20), input_shape=input_shape))
+    model.add(BatchNormalization())
 
     # The RepeatVector-layer repeats the input n times
     model.add(RepeatVector(MAX_RESULT_LENGTH))
 
     # Decoder:
-    model.add(LSTM(256, return_sequences=True))
-    model.add(Dropout(0.25))
+    model.add(Bidirectional(LSTM(20, return_sequences=True)))
+    model.add(BatchNormalization())
 
     model.add(TimeDistributed(Dense(N_FEATURES)))
     model.add(Activation('softmax'))
 
     model.compile(
         loss='categorical_crossentropy',
-        optimizer='adam',
+        optimizer=Adam(lr=0.01),
         metrics=['accuracy'],
     )
 
@@ -378,7 +391,7 @@ epoch. Here's the main function of our code:
 
 {% highlight python %}
 from time import sleep
-from keras.callbacks import EarlyStopping, ModelCheckpoint
+from keras.callbacks import ModelCheckpoint
 
 def main():
     model = build_model()
@@ -399,9 +412,6 @@ def main():
         batch_size=BATCH_SIZE,
         validation_data=(x_test, y_test),
         callbacks=[
-            EarlyStopping(
-                patience=20,
-            ),
             ModelCheckpoint(
                 'model.h5',
                 save_best_only=True,
@@ -420,25 +430,28 @@ if __name__ == '__main__':
 Finally, we need to fill in some of the global variables we used throughout
 the code. With equations using two numbers from 0 to 999, there's 998k possible
 data points.
-Let's use about a sixteenth of that for our data, and a quarter of that for
-testing, meaning we'll train on ~ 50k data points and validate on ~ 14k
-different data points. Here's my config:
+Let's use 30k of those for our dataset, and validate on 10% of that, meaning
+we'll train on about 2.7% of possible equations, and have to generalize to
+the remaining 97.3%. That may sound impressive, but Deep Learning is actually
+used to facing much more dire odds.
+
+Here's my complete config:
 
 {% highlight python %}
 MIN_NUMBER = 0
 MAX_NUMBER = 999
 
 MAX_N_EXAMPLES = (MAX_NUMBER - MIN_NUMBER) ** 2
-N_EXAMPLES = int(round(MAX_N_EXAMPLES / 16.))
+N_EXAMPLES = 30000
 N_FEATURES = len(CHARS)
 MAX_NUMBER_LENGTH_LEFT_SIDE = len(str(MAX_NUMBER))
 MAX_NUMBER_LENGTH_RIGHT_SIDE = MAX_NUMBER_LENGTH_LEFT_SIDE + 1
 MAX_EQUATION_LENGTH = (MAX_NUMBER_LENGTH_LEFT_SIDE * 2) + 4
 MAX_RESULT_LENGTH = MAX_NUMBER_LENGTH_RIGHT_SIDE + 1
 
-SPLIT = .25
-EPOCHS = 100
-BATCH_SIZE = 64
+SPLIT = .1
+EPOCHS = 200
+BATCH_SIZE = 256
 {% endhighlight %}
 
 Finally, we can start training. Either call `main()` from the shell, or store
@@ -448,54 +461,68 @@ everything in a file `training.py` and run it via `python training.py`.
 ### Results
 
 Running the code as it is described here, with some patience I get to a test
-accuracy of `0.999` on the test set after about 60 epochs:
+accuracy of `1.0` on the test set after about 120 epochs. Yes that's right,
+it seems we're making zero mistakes on our test set of 3000 equations.
+Here's a graph showing how accuracy developed during training.
+As you can see, overfitting is not a problem for us. The capacity of the
+network is just way too small to be learning examples by heart.
 
-![Plot showing convergence of loss and accuracy over training time]({{ site.url }}/assets/images/math_figure_5.png)
+![Plot showing convergence of accuracy over training time]({{ site.url }}/assets/images/math_figure_5.png)
 
-That's great, but still not perfect! Did our model not generalize to all areas
-of the problem space?
+That's great, but running it on some more, unseen example equations, the model
+still makes the occasional mistake! Why is that? Did our model not generalize
+to all areas of the problem space?
 
 
 ### Analyzing the Mistakes
 
-Let me preface this by saying that the problems in which Deep Learning really
-shines are all concerned with "natural" data, like speech or images. In these
-fields, a bit of noise can be perfectly acceptable, the same way that humans
-do not achieve a perfect performance in anything (sorry). This is math though,
-and it would be a nice proof of the power of LSTM models if we could learn
-something that requires 100% exactness.
+Let's look at some of the examples where the model failed to give the right
+answer. I tried 20k new equations, and out of those, only 10 were incorrect,
+for example:
 
-So, let's browse some of the examples where the model failed to give a correct
-answer. I see some interesting ones where we get correct representations but
-small errors in the space of numbers, e.g. `800 + 890 = 1689 (expected: 1690)`.
-It seems like the network did not follow the strategy of adding up number by
-number as I (a biased human) expected, but rather goes for a more
-"instinctive" adding up.
+```
+47 + 58   = 115  (should have been 105)
+94 + 909  = 1903 (should have been 1003)
+2 + 7     = 19   (should have been 9)
+989 + 811 = 1890 (should have been 1800)
+22 + 78   =  00  (should have been 100)
+```
 
-Even more interesting are the failures where things seem to have gone
-completely off the hook: `978 + 20 = 008 (expected: 998)`. What happened here?
-It seems that part of the model thought the result should be `1008`, while
-another part thought it should be `998`. It's almost as if each position in
-the output sequence follows its own stubborn logic, not really caring if the
-number as a whole makes any sense. This is probably a weakness of LSTMs with
-these kinds of data and would require some research to solve.
+We notice:
+1. Most, but not all errors are in the space of smaller numbers, i.e. where
+  at least one number is less than 100.
+2. All errors seem to be in one single digit only, while the rest of the digits
+  are correct.
+
+Error #1 is easy to understand: In the lower number range, the rules of
+addition change a little bit (the first digit no longer counts the
+100s). At the same time, this problematic space has seen less training examples
+than the easier parts. In the whole equation space, there are ~800k
+points where both numbers have three digits, and only about 80 where both numbers
+are below 10.
+
+Number two is a bit harder to follow. It seems to be an utterly un-human thing
+to do. A human would make mistakes in the space of numbers, not in the space of strings.
+It's perfectly alright to get the last digit wrong, but to report "1903" instead of
+"1003" is unacceptable! What happened?
+
+In the case of "1903" vs "1003", it looks like part of the decoder thought the result would be above 1003,
+so correctly spit out a "1", while the next output thought "Nope, definitely below 1000"
+and output a "9" as in nine-hundred-something. Does each position in
+the output sequence follow its own stubborn logic, not really caring if the number as a whole makes any
+sense? This could probably be improved by using a better vector representation
+or coming up with a better loss function. Or it might be a general weakness in this
+kind of Seq2Seq model.
 
 Anyway, since our input space has only two factors of variation (the two
 numbers that go into building the equation), we can plot the equation space in
-a 2D pane. So I went ahead and created a scatter plot with green dots marking
+a 2D pane. I went ahead and created a scatter plot with green dots marking
 correct predictions and red dots marking incorrect ones. Find the code for that
 [here](https://github.com/cpury/lstm-math/blob/master/plot.py).
 
 ![Scatter plot of errors in problem space]({{ site.url }}/assets/images/math_figure_4.png)
 
-It seems errors appear mostly in the lower bounds, where one of the numbers is
-below 100 or even below 10. Here, the rules of adding up numbers change a little
-bit (the first digit no longer counts the 100s). To increase the trouble, this
-problematic space has less training examples than the easier parts.
-
-We might solve this problem by introducing sample weights or reversing the
-strings (so that the order of digits in numbers is more deterministic). I'll
-leave it up to you to work on this!
+The red dots are hard to see, but they are there!
 
 
 ### Further Experiments
@@ -503,8 +530,7 @@ leave it up to you to work on this!
 There's lots to do! You can get creative about getting over this lower-number
 problem. We can also increase the complexity of the equations. I was able to get
 quite far on ones as complex as `131 + 83 - 744 * 33 (= -24338)`, but haven't
-really gotten it to work with division. But that's probably just a matter of
-tweaking the model or the training process.
+really gotten it to work with division.
 
 Feel free to pass on hints, ideas for improvement, or your own results in the
 comments or as issues on my [repository](https://github.com/cpury/lstm-math).
