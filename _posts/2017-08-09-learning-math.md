@@ -390,7 +390,6 @@ callbacks like the `ModelCheckpoint`, which stores the best model after each
 epoch. Here's the main function of our code:
 
 {% highlight python %}
-from time import sleep
 from keras.callbacks import ModelCheckpoint
 
 def main():
@@ -406,19 +405,21 @@ def main():
     print_example_predictions(5, model, x_test, y_test)
     print()
 
-    model.fit(
-        x_train, y_train,
-        epochs=EPOCHS,
-        batch_size=BATCH_SIZE,
-        validation_data=(x_test, y_test),
-        callbacks=[
-            ModelCheckpoint(
-                'model.h5',
-                save_best_only=True,
-            ),
-        ]
-    )
-    sleep(0.01)
+    try:
+        model.fit(
+            x_train, y_train,
+            epochs=EPOCHS,
+            batch_size=BATCH_SIZE,
+            validation_data=(x_test, y_test),
+            callbacks=[
+                ModelCheckpoint(
+                    'model.h5',
+                    save_best_only=True,
+                ),
+            ]
+        )
+    except KeyboardInterrupt:
+        print('\nCaught SIGINT\n')
 
     print_example_predictions(20, model, x_test, y_test)
 
