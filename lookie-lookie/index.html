@@ -22,7 +22,8 @@
 
 
   <div id="info" data-content="info">
-    Hi there! This is Lookie Lookie.<br>
+    <h3>Hi there! 😃</h3>
+    This is Lookie Lookie.<br>
     Please enable your webcam.
   </div>
 
@@ -61,17 +62,21 @@
     </div>
   </div>
 
-  <div id="container">
-    <video id="video" width="400" height="300" preload="auto" loop playsinline autoplay>
+  <div id="video-container">
+    <video id="webcam" width="400" height="300" preload="auto" loop playsinline autoplay>
     </video>
     <canvas id="overlay" width="400" height="300"></canvas>
   </div>
 
+  <footer>
+    Created with TensorFlow.js by Max Schumacher.
+    <a href="https://github.com/cpury/lookie-lookie" target="_blank" alt="Source">Source</a>
+  </footer>
+
   <canvas id="eyes" width="50" height="25"></canvas>
   <canvas id="temp" width="400" height="300"></canvas>
 
-  <div id="followBall" class="ball"></div>
-  <div id="modelBall" class="ball"></div>
+  <div id="target"></div>
 
 
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -80,7 +85,9 @@
   <script src="js/globals.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/facetracker.js"></script>
-  <script src="js/ball.js"></script>
+  <script src="js/mouse.js"></script>
+  <script src="js/dataset.js"></script>
+  <script src="js/training.js"></script>
   <script src="js/heatmap.js"></script>
   <script src="js/main.js"></script>
 </body>

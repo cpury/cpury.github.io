@@ -3,9 +3,10 @@ body, html {
   height: 100%;
   overflow: hidden;
   font-family: 'Roboto', sans-serif;
+  color: rgba(0, 0, 0, 0.8);
 }
 
-#container, #video, #overlay {
+#video-container, #webcam, #overlay {
   /* width: 50%;
   height: 50%; */
   position: absolute;
@@ -27,9 +28,9 @@ body, html {
   left: 0;
 }
 
-.ball {
+#target {
+  background-color: lightgreen;
   position: absolute;
-  background-color: indianred;
   border-radius: 50%;
   height: 40px;
   width: 40px;
@@ -39,8 +40,19 @@ body, html {
   opacity: 0;
 }
 
-#modelBall {
-  background-color: lightgreen;
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  background-color: #05668d;
+  color: #ebf2fa;
+  font-size: 16pt;
+  padding: 0.5em;
+}
+
+a {
+  color: inherit;
 }
 
 @-webkit-keyframes flash {
@@ -84,6 +96,10 @@ body, html {
   animation-duration: 1s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
+}
+
+#info h3 {
+  margin: 0.2em 0;
 }
 
 #info.flash {
@@ -130,4 +146,5 @@ button {
   height: 100%;
   width: 100%;
   z-index: 10;
+  pointer-events: none;
 }

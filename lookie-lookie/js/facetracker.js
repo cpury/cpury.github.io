@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  var vid = document.getElementById('video');
+  var vid = document.getElementById('webcam');
   var overlay = document.getElementById('overlay');
 
   window.facetracker = {
@@ -48,7 +48,7 @@ $(document).ready(function() {
     },
 
     gumFail: function() {
-      ui.showInfo('There was some problem trying to fetch video from your webcam', true);
+      ui.showInfo('There was some problem trying to fetch video from your webcam 😭', true);
     },
 
     startVideo: function() {
@@ -75,21 +75,21 @@ $(document).ready(function() {
 
     getEyesRect: function(position) {
       // Given a tracked face, returns a rectangle surrounding the eyes.
-      var minX = position[19][0];
-      var maxX = position[15][0];
-      var minY = Math.min(position[20][1], position[21][1], position[17][1], position[16][1]);
-      var maxY = Math.max(position[23][1], position[26][1], position[31][1], position[28][1]);
+      var minX = position[19][0] + 3;
+      var maxX = position[15][0] - 3;
+      var minY = Math.min(position[20][1], position[21][1], position[17][1], position[16][1]) + 6;
+      var maxY = Math.max(position[23][1], position[26][1], position[31][1], position[28][1]) + 3;
 
       var width = maxX - minX;
-      var height = maxY - minY;
+      var height = maxY - minY - 5;
 
-      return [minX, minY, width, height * 1.5];
+      return [minX, minY, width, height * 1.25];
     },
 
     trackFace: function(position) {
       // Given a tracked face, crops out the eyes and draws them in the eyes canvas.
       var rect = facetracker.getEyesRect(position);
-      currentEyeRect = rect;
+      facetracker.currentEyeRect = rect;
 
       var tempCanvas = document.getElementById('temp');
       var tempCtx = tempCanvas.getContext('2d');
@@ -97,11 +97,9 @@ $(document).ready(function() {
       var eyesCtx = eyesCanvas.getContext('2d');
 
       tempCtx.drawImage(facetracker.vid, 0, 0, facetracker.vidWidth, facetracker.vidHeight);
-
+      eyesCtx.drawImage(tempCanvas, rect[0], rect[1], rect[2], rect[3], 0, 0, eyesCanvas.width, eyesCanvas.height);
       tempCtx.strokeStyle = 'green';
       tempCtx.strokeRect(rect[0], rect[1], rect[2], rect[3]);
-
-      eyesCtx.drawImage(tempCanvas, rect[0], rect[1], rect[2], rect[3], 0, 0, eyesCanvas.width, eyesCanvas.height);
     }
   };
 
@@ -115,7 +113,7 @@ $(document).ready(function() {
   } else if (navigator.getUserMedia) {
     navigator.getUserMedia({video : true}, facetracker.gumSuccess, facetracker.gumFail);
   } else {
-    ui.showInfo('Your browser does not seem to support getUserMedia. This will probably only work in Chrome or Firefox.', true);
+    ui.showInfo('Your browser does not seem to support getUserMedia. 😭 This will probably only work in Chrome or Firefox.', true);
   }
 
   facetracker.ctrack = new clm.tracker();
