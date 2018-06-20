@@ -904,6 +904,7 @@ body:not(.post-template) .post-title {
     width: 126%;
     max-width: none;
     margin: 0 -13%;
+    height: auto;
 }
 
 /* The author credit area after the post */

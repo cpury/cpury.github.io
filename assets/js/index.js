@@ -40,16 +40,18 @@
         function updateImageWidth() {
             var $this = $(this),
                 contentWidth = $postContent.outerWidth(), // Width of the content
-                imageWidth = this.naturalWidth; // Original image resolution
+                imageWidth = this.naturalWidth || $this.width(); // Original image resolution
 
             if (imageWidth >= contentWidth) {
-                $this.addClass('full-img');
+                // $this.addClass('full-img');
+                $this.attr("class", "full-img");
             } else {
-                $this.removeClass('full-img');
+                // $this.removeClass('full-img');
+                $this.attr("class", "");
             }
         }
 
-        var $img = $("img").on('load', updateImageWidth);
+        var $img = $("img, svg").on('load', updateImageWidth);
         function casperFullImg() {
             $img.each(updateImageWidth);
         }
