@@ -43,11 +43,19 @@
                 imageWidth = this.naturalWidth || $this.width(); // Original image resolution
 
             if (imageWidth >= contentWidth) {
-                // $this.addClass('full-img');
-                $this.attr("class", "full-img");
+                if ($this.prop("tagName") == 'svg') {
+                    var c = $this.attr('class');
+                    $this.attr("class", c + " full-img");
+                } else {
+                    $this.addClass('full-img');
+                }
             } else {
-                // $this.removeClass('full-img');
-                $this.attr("class", "");
+                if ($this.prop("tagName") == 'svg') {
+                    var c = $this.attr('class');
+                    $this.attr("class", c.replace('full-img', ''));
+                } else {
+                    $this.removeClass('full-img');
+                }
             }
         }
 
