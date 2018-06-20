@@ -315,8 +315,7 @@ First, we need to decide what the shape of our inputs is supposed to be. Since
 it's a matrix with a one-hot-vector for each position in the equation string,
 this is simply `(MAX_EQUATION_LENGTH, N_FEATURES)`. We'll pass that input to a
 first layer consisting of 256 LSTM cells. Each will look at the input,
-character by character, and output a single value. We also add some light
-dropout for regularization.
+character by character, and output a single value.
 
 Now, ideally we'd use the activation of each LSTM on each of the sequence
 items and then use them as inputs to our decoder. It seems Keras is having
