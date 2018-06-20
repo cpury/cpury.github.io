@@ -314,15 +314,14 @@ Now, let's build the model. Thanks to Keras, this is quite straightforward.
 First, we need to decide what the shape of our inputs is supposed to be. Since
 it's a matrix with a one-hot-vector for each position in the equation string,
 this is simply `(MAX_EQUATION_LENGTH, N_FEATURES)`. We'll pass that input to a
-first layer consisting of 256 LSTM cells. Each will look at the input,
+first layer consisting of 20 (bidirectional) LSTM cells. Each will look at the input,
 character by character, and output a single value.
 
-Now, ideally we'd use the activation of each LSTM on each of the sequence
-items and then use them as inputs to our decoder. It seems Keras is having
-a hard time with this, so the accepted workaround is to let the LSTM cells
-output single values each after going through the whole input, and then repeat
-these vectors using `RepeatVector` to feed the decoder network. There's an
-issue on Keras discussing this
+There are several ways to build a Seq2Seq model. The simplest way is to simply
+collect all information about the input sequence in a fixed vector, then have
+the decoder generate a sequence from that. To make this possible, we use
+`RepeatVector` to feed the decoder network with the representation in each time
+step. For a more detailed discussion about Seq2Seq models in Keras, see
 [here](https://github.com/fchollet/keras/issues/5203).
 
 So after we repeat the encoded vector `n` times with `n` being the (maximum)
@@ -420,6 +419,9 @@ def main():
     except KeyboardInterrupt:
         print('\nCaught SIGINT\n')
 
+    # Load weights achieving best val_loss from training:
+    model.load_weights('model.h5')
+
     print_example_predictions(20, model, x_test, y_test)
 
 
@@ -431,7 +433,7 @@ Finally, we need to fill in some of the global variables we used throughout
 the code. With equations using two numbers from 0 to 999, there's 998k possible
 data points.
 Let's use 30k of those for our dataset, and validate on 10% of that, meaning
-we'll train on about 2.7% of possible equations, and have to generalize to
+we'll train on about 2.7% of possible equations and expect it to generalize to
 the remaining 97.3%. That may sound impressive, but Deep Learning is actually
 used to facing much more dire odds.
 
