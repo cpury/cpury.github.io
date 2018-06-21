@@ -94,6 +94,12 @@ I found **Nadam (Adam with Nesterov-Momentum)** to be the best optimizer for RNN
 
 To evaluate the model, I had spared out 20% of our training conversations for the test set. On those, the model achieved a **Pearson-correlation of 0.96** between the predicted scores and our human labels. **Errors larger than 0.4** were only made extremely rarely in about **0.3%** of all cases. Running a single prediction takes **10 ms** on a basic server without GPU.
 
+Let's look at a concrete example. Note the example was originally in German, but translating to English was possible 1:1. I feed this sequence to the model, and after each word I ask: What's the current danger you expect? According to that, I color it from green to red.
+
+![Example with words colored by danger]({{ site.url }}/assets/images/privalino_example.png)
+
+As you can see, the model starts neutral (yellow). "Sweetie" could also come from a parent. But over the course of the question, it grows increasingly suspicious until it's dark red by the end.
+
 
 ### Ethics
 
