@@ -13,7 +13,7 @@ Today I'm not going to talk about a funny use of Machine Learning or a cool appl
 
 
 ### Privalino
-**Privalino** is a young startup from Germany that aims to make the internet a **safer place for kids**. It's first project is to build an **instant messenger** for children under the age of 13 that can **automatically detect dangers** such as cyber grooming, cyber bullying and others so that appropriate measures can be taken. I've joined their small team a while ago and am quite excited about the project! If you are interested, you can find more info in German at [privalino.de](https://privalino.de/).
+**Privalino** is a young startup from Germany that aims to make the internet a **safer place for kids**. It's first project is to build an **instant messenger** for children under the age of 13 that can **automatically detect dangers** such as **cyber grooming, cyber bullying** and others so that appropriate measures can be taken. I've joined their small team a while ago and am quite excited about the project! If you are interested, you can find more info in German at [privalino.de](https://privalino.de/).
 
 
 ### The Problem: Cyber Grooming
@@ -105,7 +105,7 @@ As you can see, the model starts neutral (yellow). "Sweetie" could also come fro
 
 So we've proven that the problem is technically **solvable** to an acceptable degree. But **should it even be solved?**
 
-I'm well aware that this whole project can make some people cringe, and that's good. We are spying on kids and censoring them, in a way. However, the danger we that young kids are facing these days is very real. Even if we don the healthy attitude that children should make their own mistakes, I think we can all agree that no child deserves to be abused. At the end of the day, our service is a **tool for the parents**. They should wield it responsibly. To this end, Privalino tries their best to **integrate and talk to the children and parents directly**.
+I'm well aware that this whole project can make some people cringe, and that's good. We *are* spying on kids, in a way. However, the danger that young kids are facing these days is very real. Even if we don the healthy attitude that children should make their own mistakes, I think we can all agree that no child deserves to be abused. At the end of the day, our service is a **tool for the parents**. They should wield it responsibly. To this end, Privalino tries their best to **integrate and talk to the children and parents directly**.
 
 
 ### Outlook
