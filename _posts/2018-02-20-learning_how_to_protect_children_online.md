@@ -37,7 +37,7 @@ Afterwards, we went through the data by hand and **annotated** it. Each message 
 Having collected a suitable dataset, we aimed to build a model that could predict this score without overfitting to the training set. The Privalino team had already trained a traditional NLP classifier that delivered a solid performance. However, these methods are not suitable for solving such an intricate problem
 to full satisfaction.
 
-Instead, I built a model based on **Deep Learning ideas**. A very similar architecture also helped me get in the [top 4%](https://www.kaggle.com/mschumacher) of the [Google Jigsaw Toxic Comments competition on Kaggle](https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge). I hope this will help you with your practice as well. The final model achieved much better metrics compared to the traditional approach. And it only takes a fraction of the time to run the prediction.
+Instead, I built a model based on **Deep Learning ideas** and learned a lot in the process. Hopefully, this will help you with your practice as well. The final model achieved much better metrics compared to the traditional approach. And it only takes a fraction of the time to run the prediction.
 
 
 ### The Model
@@ -54,7 +54,7 @@ For practical reasons, we have to limit the **window** of text the model can loo
 
 #### Architecture
 
-When working with sequences in neural networks, you have two basic building blocks: **1D-Convolutions** and **recurrent neural networks**. Convolutions are great at learning local features, while RNNs excel at learning long-term dependencies. I tried convolutions alone (with a global max pooling layer at the end), but their power of understanding a text just seemed sub-par to LSTMs. I also tried pure RNN models, but they are cumbersome to train and need more resources. So my final architecture involved both: A conv block followed by an RNN block.
+When working with sequences in neural networks, you have two basic building blocks: **1D-Convolutions** and **recurrent neural networks**. Convolutions are great at learning local features, while RNNs excel at learning long-term dependencies. I tried convolutions alone (with a global max pooling layer at the end), but their power of understanding a text just seemed sub-par to LSTMs. I also tried pure RNN models, but they are cumbersome to train and need more resources. My final architecture involved both: A conv block followed by an RNN block.
 
 ##### Conv Block
 
@@ -91,14 +91,14 @@ I found **Nadam (Adam with Nesterov-Momentum)** to be the best optimizer for RNN
 
 ### Results
 
-To evaluate the model, I had spared out 20% of our training conversations for the test set. On those, the model achieved a **Pearson-correlation of 0.96** between the predicted scores and our human labels. **Errors larger than 0.4** were only made extremely rarely in about **0.1%** of all cases. Running a single prediction takes **10 ms** on a basic server without GPU.
+To evaluate the model, I had spared out 20% of our training conversations for the test set. On those, the model achieved a **Pearson-correlation of 0.96** between the predicted scores and our human labels. **Errors larger than 0.4** were only made extremely rarely in about **0.3%** of all cases. Running a single prediction takes **10 ms** on a basic server without GPU.
 
 
 ### Ethics
 
 So we've proven that the problem is technically **solvable** to an acceptable degree. But **should it even be solved?**
 
-We are well aware that this whole project can make some people cringe, and that's good. We are spying on kids and censoring them, in a way. However, I think in the case of really young kids, the danger that we're protecting them from is real. And even with the healthy attitude that children should be allowed to make their own mistakes, we should agree that no child deserves to be abused. At the end of the day, our service is a **tool for the parents**. They should wield it responsibly. To this end, Privalino tries their best to **integrate and talk to the children and parents directly**.
+I'm well aware that this whole project can make some people cringe, and that's good. We are spying on kids and censoring them, in a way. However, the danger we that young kids are facing these days is very real. Even if we don the healthy attitude that children should make their own mistakes, I think we can all agree that no child deserves to be abused. At the end of the day, our service is a **tool for the parents**. They should wield it responsibly. To this end, Privalino tries their best to **integrate and talk to the children and parents directly**.
 
 
 ### Outlook
