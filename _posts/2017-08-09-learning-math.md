@@ -9,8 +9,9 @@ excerpt: >
   learning, the boundaries have started to blur... (Updated 9 DEC 2017)
 categories: machine-learning
 permalink: learning-math/
-tags: [machine-learning, recurrent-neural-networks, keras]
+tags: [machine-learning, recurrent-neural-networks, keras, nlp]
 disqus: true
+image: /assets/images/math.jpg
 ---
 
 **Updated 8 DEC 2017:** Improved the model and rewrote some parts

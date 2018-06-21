@@ -5,8 +5,9 @@ date: 2018-06-20 14:25:51
 description: "How I built a neural network that detects perverts and other dangers"
 categories: machine-learning
 permalink: learning-to-protect/
-tags: [machine-learning]
+tags: [machine-learning, recurrent-neural-networks, nlp]
 disqus: true
+image: /assets/images/kid.jpg
 ---
 Today I'm not going to talk about a funny use of Machine Learning or a cool application you can try at home. Instead, I want to talk about a project I’ve been working on professionally over the last few months. The job involved a **complex NLP pipeline**, an **interesting application**, and lots of new experiences for me. The knowledge I gathered helped me get in the **[top 4%](https://www.kaggle.com/mschumacher) of the [Google Jigsaw Toxic Comments on Kaggle](https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge)**, and maybe it can also help you with your projects in the future.
 

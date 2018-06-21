@@ -5,8 +5,9 @@ date:   2015-05-28 18:33:45
 description: "Learning how to produce Bible-like texts with Recurrent Neural Networks"
 categories: machine-learning
 permalink: learning-holiness/
-tags: [machine-learning, recurrent-neural-networks]
+tags: [machine-learning, recurrent-neural-networks, nlp]
 disqus: true
+image: /assets/images/holy.jpg
 ---
 
 Let's teach a neural network to write Bible-like texts! If you have not heard about [Andrej Karpathy](http://karpathy.github.io/)'s incredibly awesome [blog post](http://karpathy.github.io/2015/05/21/rnn-effectiveness/) about Recurrent Neural Networks, I recommend you drop everything right now and head over there for a great read! All of this here is based on his work and provided code.
