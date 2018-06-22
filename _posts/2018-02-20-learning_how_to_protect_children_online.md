@@ -13,7 +13,7 @@ Today I'm not going to talk about a funny use of Machine Learning or a cool appl
 
 
 ### Privalino
-**Privalino** is a young startup from Germany that aims to make the internet a **safer place for kids**. It's first project is to build an **instant messenger** for children under the age of 13 that can **automatically detect dangers** such as **cyber grooming, cyber bullying** and others so that appropriate measures can be taken. I've joined their small team a while ago and am quite excited about the project! If you are interested, you can find more info in German at [privalino.de](https://privalino.de/).
+**[Privalino](https://privalino.de/)** is a young startup from Germany that aims to make the internet a **safer place for kids**. Their first project is to build an **instant messenger** for children under the age of 13 that can **automatically detect dangers** such as **cyber grooming, cyber bullying** and others so that appropriate measures can be taken. I've joined their small team a while ago and am quite excited about the project! If you are interested, you can find more info in German at [privalino.de](https://privalino.de/).
 
 
 ### The Problem: Cyber Grooming
@@ -110,4 +110,4 @@ I'm well aware that this whole project can make some people cringe, and that's g
 
 ### Outlook
 
-Needless to say, there is still room for improvement. We are constantly collecting more data, and there are still many more complex and subtle tactics that we are not catching right now. I'm always happy to hear about your ideas.
+Needless to say, there is still room for improvement. We are constantly collecting more data, and there are still many more complex and subtle tactics that we are not catching right now. I'm always happy to hear about your ideas. Also, if you have kids that grow up speaking German, consider giving [our app](https://privalino.de/) a try! :)
