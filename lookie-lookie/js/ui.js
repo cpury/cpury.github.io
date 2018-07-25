@@ -43,7 +43,7 @@ window.ui = {
     this.nExamples = nTrain + nVal;
     this.setContent('n-train', nTrain);
     this.setContent('n-val', nVal);
-    if (nTrain == 2) {
+    if (nTrain >= 2) {
       $('#start-training').prop('disabled', false);
     }
     if (this.state == 'collecting' && this.nExamples == 20) {
@@ -57,6 +57,9 @@ window.ui = {
         '<h3>Fantastic 👏</h3>' +
         'You\'ve collected lots of examples. Let\'s try training again!'
       );
+    }
+    if (nTrain > 0 && nVal > 0) {
+      $('#store-data').prop('disabled', false);
     }
   },
 

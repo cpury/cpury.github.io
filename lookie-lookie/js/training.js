@@ -13,26 +13,20 @@ window.training = {
       shape: [4],
     });
 
-    var dropout_input = tf.layers.dropout({
-      rate: 0.1,
-    }).apply(input_image);
     var conv = tf.layers.conv2d({
       kernelSize: 5,
       filters: 20,
       strides: 1,
       activation: 'relu',
       kernelInitializer: 'varianceScaling',
-    }).apply(dropout_input);
+    }).apply(input_image);
     var maxpool = tf.layers.maxPooling2d({
       poolSize: [2, 2],
       strides: [2, 2],
     }).apply(conv);
     var flat = tf.layers.flatten().apply(maxpool);
-    var dropout_conv = tf.layers.dropout({
-      rate: 0.1,
-    }).apply(flat);
 
-    var concat = tf.layers.concatenate().apply([dropout_conv, input_meta]);
+    var concat = tf.layers.concatenate().apply([flat, input_meta]);
 
     var output = tf.layers.dense({
       units: 2,
@@ -42,7 +36,7 @@ window.training = {
 
     var model = tf.model({inputs: [input_image, input_meta], outputs: output});
 
-    optimizer = tf.train.adam(0.001);
+    optimizer = tf.train.adam(0.0005);
 
     model.compile({
       optimizer: optimizer,
@@ -122,13 +116,17 @@ window.training = {
     // Return relative x, y where we expect the user to look right now.
     return tf.tidy(function() {
       var img = dataset.getImage();
+      img = dataset.convertImage(img);
       var metaInfos = dataset.getMetaInfos();
       var prediction = training.currentModel.predict([img, metaInfos]);
 
-      var x = prediction.get(0, 0) + 0.5;
-      var y = prediction.get(0, 1) + 0.5;
-
       return [prediction.get(0, 0) + 0.5, prediction.get(0, 1) + 0.5];
     });
-  }
+  },
+
+  visualizePixels: function(canvas) {
+    var model = training.currentModel;
+    var filter = model.layers[0].weights;
+    tf.toPixels(weights, canvas);
+  },
 };

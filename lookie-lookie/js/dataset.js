@@ -59,6 +59,46 @@ window.dataset = {
     return Math.random() < 0.2 ? 'val' : 'train';
   },
 
+  rgbToGrayscale(image, n, x, y) {
+    // Given an rgb tensor, returns a grayscale value.
+    // Inspired by http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0029740
+    var r = (image.get(n, x, y, 0) + 1) / 2;
+    var g = (image.get(n, x, y, 1) + 1) / 2;
+    var b = (image.get(n, x, y, 2) + 1) / 2;
+
+    // Gamma correction:
+    var exponent = 1 / 2.2;
+    r = Math.pow(r, exponent);
+    g = Math.pow(g, exponent);
+    b = Math.pow(b, exponent);
+
+    // Gleam:
+    var gleam = ((r + g + b) / 3);
+    return gleam * 2 - 1;
+  },
+
+  convertImage: function(image) {
+    // Convert to grayscale and add spatial info
+    var imageShape = image.shape;
+    var w = imageShape[1];
+    var h = imageShape[2];
+
+    var data = [new Array(w)];
+    for (var x = 0; x < w; x++) {
+      data[0][x] = new Array(h);
+
+      for (var y = 0; y < h; y++) {
+        data[0][x][y] = [
+          dataset.rgbToGrayscale(image, 0, x, y),
+          x / w * 2 - 1,
+          y / h * 2 - 1,
+        ];
+      }
+    }
+
+    return tf.tensor(data);
+  },
+
   addToDataset: function(image, metaInfos, target, key) {
     // Add the given x, y to either 'train' or 'val'.
     var set = dataset[key];
@@ -95,6 +135,8 @@ window.dataset = {
     target = tf.tidy(function() { return tf.tensor1d(target).expandDims(0); });
     var key = dataset.whichDataset();
 
+    image = dataset.convertImage(image);
+
     dataset.addToDataset(image, metaInfos, target, key);
 
     ui.onAddExample(dataset.train.n, dataset.val.n);
@@ -110,4 +152,61 @@ window.dataset = {
       dataset.addExample(img, metaInfos, mousePos);
     });
   },
+
+  toJSON: function() {
+    var tensorToArray = function(t) {
+      var typedArray = t.dataSync();
+      return Array.prototype.slice.call(typedArray);
+    };
+
+    return {
+      inputWidth: dataset.inputWidth,
+      inputHeight: dataset.inputHeight,
+      train: {
+        shapes: {
+          x0: dataset.train.x[0].shape,
+          x1: dataset.train.x[1].shape,
+          y: dataset.train.y.shape,
+        },
+        n: dataset.train.n,
+        x: dataset.train.x && [
+          tensorToArray(dataset.train.x[0]),
+          tensorToArray(dataset.train.x[1]),
+        ],
+        y: tensorToArray(dataset.train.y),
+      },
+      val: {
+        shapes: {
+          x0: dataset.val.x[0].shape,
+          x1: dataset.val.x[1].shape,
+          y: dataset.val.y.shape,
+        },
+        n: dataset.val.n,
+        x: dataset.val.x && [
+          tensorToArray(dataset.val.x[0]),
+          tensorToArray(dataset.val.x[1]),
+        ],
+        y: tensorToArray(dataset.val.y),
+      },
+    }
+  },
+
+  fromJSON: function(data) {
+    dataset.inputWidth = data.inputWidth;
+    dataset.inputHeight = data.inputHeight;
+    dataset.train.n = data.train.n;
+    dataset.train.x = data.train.x && [
+      tf.tensor(data.train.x[0], data.train.shapes.x0),
+      tf.tensor(data.train.x[1], data.train.shapes.x1),
+    ];
+    dataset.train.y = tf.tensor(data.train.y, data.train.shapes.y);
+    dataset.val.n = data.val.n;
+    dataset.val.x = data.val.x && [
+      tf.tensor(data.val.x[0], data.val.shapes.x0),
+      tf.tensor(data.val.x[1], data.val.shapes.x1),
+    ];
+    dataset.val.y = tf.tensor(data.val.y, data.val.shapes.y);
+
+    ui.onAddExample(dataset.train.n, dataset.val.n);
+  }
 };
