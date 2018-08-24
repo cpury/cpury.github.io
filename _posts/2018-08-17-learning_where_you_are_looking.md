@@ -14,6 +14,10 @@ Today, let's talk about how to learn a **complex computer vision problem right i
 
 Try out the complete project [here](https://cpury.github.io/lookie-lookie/). This requires a modern browser, a webcam, and a mouse. I did not have the time to tweak this to work on tablets/phones 😨. And of course, things get much harder when the camera is not stationary.
 
+<div class="cta-wrapper">
+    <a href="https://cpury.github.io/lookie-lookie/" class="cta" target="_blank">Check out the result 🚀</a>
+</div>
+
 
 ## The Idea
 

@@ -12,3 +12,29 @@
 @import
 	"syntax"
 ;
+
+.cta-wrapper {
+	width: 100%;
+	text-align: center;
+	margin: 3em 0;
+
+	.cta {
+		padding: 0.5em 2em;
+		border-radius: 10px;
+		text-align: center;
+		color: rgba(0,0,0,.8);
+		text-decoration: none;
+		font-family: "Open Sans", sans-serif;
+		font-size: 140%;
+		transition: 0.5s all;
+
+		background-color: rgba(#82c8a0, 0.2);
+		border: 1px solid rgba(black, 0.2);
+
+		&:hover {
+			text-decoration: underline;
+			border-color: rgba(black, 0.4);
+			background-color: rgba(#82c8a0, 0.4);
+		}
+	}
+}
