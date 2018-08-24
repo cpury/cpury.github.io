@@ -65,5 +65,5 @@ window.heatmap = {
 
     ctx.clearRect(0, 0, heatmap.width, heatmap.height);
     $('#clear-heatmap').prop('disabled', false);
-  }
+  },
 };

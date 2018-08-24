@@ -13,18 +13,22 @@ window.training = {
       shape: [4],
     });
 
-    var conv = tf.layers.conv2d({
-      kernelSize: 5,
-      filters: 20,
-      strides: 1,
-      activation: 'relu',
-      kernelInitializer: 'varianceScaling',
-    }).apply(inputImage);
+    var conv = tf.layers
+      .conv2d({
+        kernelSize: 5,
+        filters: 20,
+        strides: 1,
+        activation: 'relu',
+        kernelInitializer: 'varianceScaling',
+      })
+      .apply(inputImage);
 
-    var maxpool = tf.layers.maxPooling2d({
-      poolSize: [2, 2],
-      strides: [2, 2],
-    }).apply(conv);
+    var maxpool = tf.layers
+      .maxPooling2d({
+        poolSize: [2, 2],
+        strides: [2, 2],
+      })
+      .apply(conv);
 
     var flat = tf.layers.flatten().apply(maxpool);
 
@@ -32,13 +36,18 @@ window.training = {
 
     var concat = tf.layers.concatenate().apply([dropout, inputMeta]);
 
-    var output = tf.layers.dense({
-      units: 2,
-      activation: 'tanh',
-      kernelInitializer: 'varianceScaling',
-    }).apply(concat);
+    var output = tf.layers
+      .dense({
+        units: 2,
+        activation: 'tanh',
+        kernelInitializer: 'varianceScaling',
+      })
+      .apply(concat);
 
-    var model = tf.model({inputs: [inputImage, inputMeta], outputs: output});
+    var model = tf.model({
+      inputs: [inputImage, inputMeta],
+      outputs: output,
+    });
 
     return model;
   },
@@ -114,7 +123,7 @@ window.training = {
           training.inTraining = false;
           ui.onFinishTraining();
         },
-      }
+      },
     });
   },
 
