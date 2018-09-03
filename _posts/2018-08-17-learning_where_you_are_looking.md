@@ -23,15 +23,15 @@ Try out the complete project [here](https://cpury.github.io/lookie-lookie/). Thi
 
 **Let's predict where on the website a user is looking at by watching their eyes through the webcam!**
 
-In the browser, we can easily get access to the user's webcam. Taking the **whole image** would be **too large** an input for the net, and it would have to do a lot of work before it could even find out where the eyes are. This might be fine in a model that we train offline and deploy on a server, but to be trained and used in the browser, this would be too big a task.
+In the browser, we can easily get access to the user's webcam. Taking the **whole image** would be **too large** an input for the net, and it would have to do a lot of work before it could even find out where the eyes are. This might be fine in a model that we train offline and deploy on a server, but to be trained and used in the browser, this would be too daunting a task.
 
-To help the network, let's just use the **part of the image around the user's eyes**. With a third party JS library, we can locate the eyes and crop that area of the image:
+To help the network, we can provide it only the **part of the image around the user's eyes**. This rectangle surrounding the eyes can be located using a third party library. So the first part of the pipeline looks like this:
 
 {% include svgs/lookie-lookie_extraction.svg %}
 
-I use a **lightweight JS library** to locate the face inside the image. It's called [clmtrackr](https://github.com/auduno/clmtrackr), and while not perfect, it's quite amazing out of the box.
+The **JS library** I use to **detect and locate the face** is called [clmtrackr](https://github.com/auduno/clmtrackr). It's not perfect, but pretty lightweight, fast and overall great out of the box.
 
-With only this small but relevant image as input, a simple **Convolutional Neural Network** shouldn't have much trouble learning the problem:
+With only this small but relevant image as input, a simple **convolutional neural network** shouldn't have much trouble learning the problem:
 
 {% include svgs/lookie-lookie_model.svg %}
 
@@ -57,7 +57,7 @@ First off, **download `clmtracker.js`** from [their repository](https://github.c
 
 ## Streaming from the webcam
 
-We need to get the **user's permission to activate the webcam** and render its video stream to the website. I will not go into detail here, since it's out of scope for this tutorial. I'm also skipping a lot of backwards-compatibility code. I just assume that my users have the **latest Chrome** 😁 For a more detailed introduction, read up [here](https://www.html5rocks.com/en/tutorials/getusermedia/intro/). Otherwise, treat this as boilerplate.
+We need to get the **user's permission to activate the webcam** and render its **video stream** to the page. In this tutorial, I'm skipping a lot of backwards-compatibility-related boilerplate code. We'll simply assume that our users are surfing on the **latest Chrome** 😁
 
 First, add this to your HTML (inside the body but above the script tags):
 
@@ -101,9 +101,11 @@ ctrack.start(video);
 
 And that's it! Your face should be detected!
 
-... Don't believe me? Okay okay, let's draw a shape around your detected face to prove it.
+... don't believe me? Okay, let's draw a shape around your face to prove it.
 
-For that, we need a **canvas element** on top of the video. Inside the HTML, add this under the existing `<video>`-element:
+For that, we need a way to draw right on top of the video element. Drawing in general is done via the `<canvas>` tag in HTML. So we need to create an **overlayed canvas element** right ontop of the video.
+
+Inside the HTML, add this under the existing `<video>`-element:
 
 {% highlight html %}
 <canvas id="overlay" width="400" height="300"></canvas>
@@ -118,7 +120,11 @@ For that, we need a **canvas element** on top of the video. Inside the HTML, add
 
 (Feel free to move the inline style to a dedicated stylesheet).
 
-Now add some more initialization code underneath `ctrack.init()`:
+This adds a canvas with the same size. The CSS guarantees that they are exactly at the same position.
+
+Now **each time the browser renders**, we want to **draw something to the canvas**. Running a method at each frame is done via `requestAnimationLoop()`. Before we draw something to the canvas, we should remove the current content by clearing it. Then finally we can tell clmtracker to **draw straight to the canvas**.
+
+Here's the code. Add it un underneath `ctrack.init()`:
 
 {% highlight js %}
 const overlay = document.getElementById('overlay');
@@ -137,9 +143,9 @@ function trackingLoop() {
 }
 {% endhighlight %}
 
-Now call `trackingLoop()` inside `onStreaming()` right after `ctrack.start()`.
+Now call `trackingLoop()` inside `onStreaming()` right after `ctrack.start()`. It will re-run itself at each frame.
 
-Refresh your browser. Your face should get a funny green mask in the video. Sometimes you have to move around a bit for it to track your face correctly.
+Refresh your browser. Your face should get a funny green mask in the video. Sometimes you have to move around a bit for it to capture your face correctly.
 
 ![The Mask (1994) was a good movie]({{ site.url }}/assets/images/face1.png)
 
@@ -152,9 +158,11 @@ Luckily, cmltracker gives us the location of not only the face, but of **70 faci
 
 ![Facial features]({{ site.url }}/assets/images/face_numbering.png)
 
-Let's define the eyes as the rectangle touching points 23, 28, 24 and 26. Then let's increase it by 5px in each direction. Finally, we'll resize it to be 50x25 pixels when copying it to the eyes canvas. This rectangle should cover everything as long as the user doesn't tilt their head too far (or is standing on their head).
+Let's define the eyes as the rectangle touching points 23, 28, 24 and 26, expanded by 5px in each direction. This rectangle should cover everything important as long as the user doesn't tilt their head too far (or is standing on their head 🙃).
 
-Add another canvas to the HTML:
+We need another canvas to capture this cropped image before we can use it. It can simply be set to 50x25 pixels. Don't worry, the actual rectangle will resize to fit in there. A little bit of deformation is okay.
+
+Add this new eyes-canvas to the HTML:
 
 {% highlight html %}
 <canvas id="eyes" width="50" height="25"></canvas>
@@ -167,7 +175,7 @@ Add another canvas to the HTML:
 </style>
 {% endhighlight %}
 
-Add this function to your JS file that will return the eye rectangle for the given facial features:
+This function will return the x, y, width and height of the rectangle surrounding the eyes. It takes as input the position-array we get from clmtracker. Add it to your JS file:
 
 {% highlight js %}
 function getEyesRectangle(positions) {
@@ -183,7 +191,10 @@ function getEyesRectangle(positions) {
 }
 {% endhighlight %}
 
-Then replace the if-block inside `trackingLoop()`:
+So now in each frame, we want to extract the eyes rectangle, stroke it in red in the overlay canvas, then copy it over to the new eyes canvas.
+Note that the video might have a different resolution internally and so we add some resizing factors for that.
+
+Replace the if-block inside `trackingLoop()`:
 
 {% highlight js %}
 if (currentPosition) {
@@ -245,7 +256,7 @@ document.onmousemove = mouse.handleMouseMove;
 
 #### Capturing images
 
-To capture an image from a canvas and store it as tensor, TensorFlow.js offers the helper function `tf.fromPixels()`. Let's use it to store and then normalize an image from our eyes canvas:
+To **capture an image from a canvas** and **store it as a tensor**, TensorFlow.js offers the helper function `tf.fromPixels()`. Let's use it to store and then normalize an image from our eyes canvas:
 
 {% highlight js %}
 function getImage() {
@@ -260,7 +271,9 @@ function getImage() {
 }
 {% endhighlight %}
 
-Each new training example should go either to the training or a separate validation set in 20% of the cases. Here's the code to add new data points:
+Note that `tf.tidy()` makes TensorFlow.js clean up our mess after we're done.
+
+Each new training example should go either to the **training or a separate validation set** in 20% of the cases. Here's the code to add new data points:
 
 {% highlight js %}
 const dataset = {
@@ -290,7 +303,7 @@ function captureExample() {
       subset.x = tf.keep(image);
       subset.y = tf.keep(mousePos);
     } else {
-      // Concatinate it to existing tensor
+      // Concatinate it to existing tensors
       const oldX = subset.x;
       const oldY = subset.y;
 
@@ -318,11 +331,16 @@ $('body').keyup(function(event) {
 });
 {% endhighlight %}
 
-Now, each time you hit space, an image with the corresponding mouse position should be added to the dataset.
+Now, each time you hit space, an image with the corresponding mouse position should be added to one of the datasets.
+
 
 ## Training a model
 
-Let's create a simple Convolutional Neural Network. TensorFlow.js provides a Keras-like API for this:
+Let's create a simple **convolutional neural network**. TensorFlow.js provides a Keras-like API for this. The network should have a **conv layer**, **max-pooling**, and finally a **dense layer with two output values** (the screen coordinates). In between, I added **dropout** as a regularizer and `flatten` to convert 2D-data to 1D. Training is done with the **Adam** optimizer.
+
+I arrived at these values after toying around on my MacBook Air. Feel free to **experiment** with them or to **add more layers**!
+
+Here's the code for the model:
 
 {% highlight js %}
 let currentModel;
@@ -363,7 +381,7 @@ function createModel() {
 }
 {% endhighlight %}
 
-Next, the code to train the network:
+To train the network, we set a fixed epoch number and a variable batch size (since we might be dealing with very small datasets).
 
 {% highlight js %}
 function fitModel() {
@@ -387,7 +405,7 @@ function fitModel() {
 }
 {% endhighlight %}
 
-Let's add a button on the page to trigger this. HTML:
+Let's add a button on the page to trigger this:
 
 {% highlight html %}
 <button id="train">Train!</button>
@@ -410,9 +428,12 @@ $('#train').click(function() {
 });
 {% endhighlight %}
 
+
 ## Time to predict!
 
-We want to mark the location we think the user is looking at with a green sphere:
+Now that we can collect a dataset and have a model set up, we have to start **predicting where the user is looking**. Let's display this with a **green sphere** that moves over the screen.
+
+First, let's add the sphere by itself:
 
 {% highlight html %}
 <div id="target"></div>
@@ -430,7 +451,7 @@ We want to mark the location we think the user is looking at with a green sphere
 </style>
 {% endhighlight %}
 
-Here's the code to move the sphere according to the model's prediction:
+To move the sphere, we periodically pass the current eyes image to the the neural network and ask "Where are they looking at?". The model returns us two coordinates and we can move the sphere there:
 
 {% highlight js %}
 function moveTarget() {
@@ -457,19 +478,26 @@ function moveTarget() {
 setInterval(moveTarget, 100);
 {% endhighlight %}
 
+I set the interval to be 100 ms. If your computer is slower than mine, you might want to increase that.
+
+
 ## Done!
 
-Alright! We have implemented all the moving parts. **Try them out**: Move your mouse over the browser window, follow it with your eyes, and spam the space key. Then hit the train button from time to time. The green ball should start following your eyes around! It may be bad in the beginning, but starting at around ~50 training examples, repeated training and some luck, it should get pretty good.
+Alright! We have implemented all the moving parts.
+
+**Try them out**: Move your mouse over the browser window, follow it with your eyes, and spam the space key. Then hit the train button from time to time. The green ball should start following your eyes around! It may be bad in the beginning, but starting at around ~50 training examples, repeated training and some luck, it should get pretty good.
 
 Find the **complete code of this tutorial** [here](https://github.com/cpury/lookie-lookie/tree/master/blogcode).
 
-While this is quite cool already, there is much room for improvement! What if the user moves their head or changes their posture? It would be great to have some meta-features, like the size, position and angle of the eyes rectangle. This and many more I added to the code in my repository. You can try them out [here](https://cpury.github.io/lookie-lookie/) and look at the code [here](https://github.com/cpury/lookie-lookie). Some of the additional features I built:
+While this is quite cool already, there is much **room for improvement**! What if the user moves their head or changes their posture? It would be great to have some meta-features, like the size, position and angle of the eyes rectangle. These and many more ideas I added to the code in my repository. You can try out the full version [here](https://cpury.github.io/lookie-lookie/) and look at the code [here](https://github.com/cpury/lookie-lookie). Some of the additional features I built:
 
-- Meta features as mentioned above
-- Heatmap to check where the model succeeds or fails
-- Ability to save/load the dataset
-- Ability to save/load the model
-- Retain weights with lowest validation loss after training
-- Better UI
+- **Meta features** as mentioned above
+- Convert images to **grayscale**
+- **CoordConv** ([info](https://eng.uber.com/coordconv/))
+- **Heatmap** to check where the model succeeds or fails
+- Ability to **save/load the dataset**
+- Ability to **save/load the model**
+- **Retain weights** with **lowest validation** loss after training
+- **Better UI**
 
 Thanks for reading! Please leave your comments, feedback and ideas below.
