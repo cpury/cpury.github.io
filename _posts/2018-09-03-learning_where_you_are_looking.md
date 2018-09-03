@@ -34,7 +34,7 @@ With only this small but relevant image as input, a simple **convolutional neura
 
 {% include svgs/lookie-lookie_model.svg %}
 
-I will cover the most important parts of what we're doing here. To see the whole thing in action with many additional features, check out my [GitHub repository](https://github.com/cpury/lookie-lookie).
+This blog post describes a fully working but minimal version of this idea. To see the complete thing in action with many additional features, check out my [GitHub repository](https://github.com/cpury/lookie-lookie).
 
 
 ## Preparation
