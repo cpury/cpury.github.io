@@ -124,7 +124,7 @@ This adds a canvas with the same size. The CSS guarantees that they are exactly 
 
 Now **each time the browser renders**, we want to **draw something to the canvas**. Running a method at each frame is done via `requestAnimationLoop()`. Before we draw something to the canvas, we should remove the current content by clearing it. Then finally we can tell clmtracker to **draw straight to the canvas**.
 
-Here's the code. Add it un underneath `ctrack.init()`:
+Here's the code. Add it underneath `ctrack.init()`:
 
 {% highlight js %}
 const overlay = document.getElementById('overlay');
