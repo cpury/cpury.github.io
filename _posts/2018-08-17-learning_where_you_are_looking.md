@@ -8,7 +8,6 @@ permalink: learning-where-you-are-looking-at/
 tags: [machine-learning, computer-vision]
 disqus: true
 image: /assets/images/eye.jpg
-draft: true
 ---
 Today, let's talk about how to learn a **complex computer vision problem right in the browser**! Thanks to [TensorFlow's JavaScript Library](https://js.tensorflow.org/), this is easy to realize. Instead of training our own model and serving it as a finished product, we will **let the user collect their own data** and then **train the model** right there, **on the client** machine. **Absolutely no server is neccessary!**
 
