@@ -4,16 +4,16 @@ window.training = {
   epochsTrained: 0,
 
   createModel: function() {
-    var inputImage = tf.input({
+    const inputImage = tf.input({
       name: 'image',
       shape: [dataset.inputHeight, dataset.inputWidth, 3],
     });
-    var inputMeta = tf.input({
+    const inputMeta = tf.input({
       name: 'metaInfos',
       shape: [4],
     });
 
-    var conv = tf.layers
+    const conv = tf.layers
       .conv2d({
         kernelSize: 5,
         filters: 20,
@@ -23,20 +23,20 @@ window.training = {
       })
       .apply(inputImage);
 
-    var maxpool = tf.layers
+    const maxpool = tf.layers
       .maxPooling2d({
         poolSize: [2, 2],
         strides: [2, 2],
       })
       .apply(conv);
 
-    var flat = tf.layers.flatten().apply(maxpool);
+    const flat = tf.layers.flatten().apply(maxpool);
 
-    var dropout = tf.layers.dropout(0.2).apply(flat);
+    const dropout = tf.layers.dropout(0.2).apply(flat);
 
-    var concat = tf.layers.concatenate().apply([dropout, inputMeta]);
+    const concat = tf.layers.concatenate().apply([dropout, inputMeta]);
 
-    var output = tf.layers
+    const output = tf.layers
       .dense({
         units: 2,
         activation: 'tanh',
@@ -44,7 +44,7 @@ window.training = {
       })
       .apply(concat);
 
-    var model = tf.model({
+    const model = tf.model({
       inputs: [inputImage, inputMeta],
       outputs: output,
     });
@@ -55,9 +55,9 @@ window.training = {
   fitModel: function() {
     // TODO Set params in UI?
     this.inTraining = true;
-    var epochs = 10;
+    const epochs = 10;
 
-    var batchSize = Math.floor(dataset.train.n * 0.1);
+    let batchSize = Math.floor(dataset.train.n * 0.1);
     batchSize = Math.max(2, Math.min(batchSize, 64));
 
     $('#start-training').prop('disabled', true);
@@ -71,10 +71,10 @@ window.training = {
 
     ui.state = 'training';
 
-    var bestEpoch = -1;
-    var bestTrainLoss = Number.MAX_SAFE_INTEGER;
-    var bestValLoss = Number.MAX_SAFE_INTEGER;
-    var bestModelPath = 'localstorage://best-model';
+    let bestEpoch = -1;
+    let bestTrainLoss = Number.MAX_SAFE_INTEGER;
+    let bestValLoss = Number.MAX_SAFE_INTEGER;
+    const bestModelPath = 'localstorage://best-model';
 
     training.currentModel.compile({
       optimizer: tf.train.adam(0.0005),
@@ -140,18 +140,52 @@ window.training = {
   getPrediction: function() {
     // Return relative x, y where we expect the user to look right now.
     return tf.tidy(function() {
-      var img = dataset.getImage();
+      let img = dataset.getImage();
       img = dataset.convertImage(img);
-      var metaInfos = dataset.getMetaInfos();
-      var prediction = training.currentModel.predict([img, metaInfos]);
+      const metaInfos = dataset.getMetaInfos();
+      const prediction = training.currentModel.predict([img, metaInfos]);
 
       return [prediction.get(0, 0) + 0.5, prediction.get(0, 1) + 0.5];
     });
   },
 
+  drawSingleFilter: function(weights, filterId, canvas) {
+    const canvasCtx = canvas.getContext('2d');
+    const kernelSize = weights.shape[0];
+    const pixelSize = canvas.width / kernelSize;
+
+    let x, y;
+    let min = 10000;
+    let max = -10000;
+    let value;
+
+    // First, find min and max:
+    for (x = 0; x < kernelSize; x++) {
+      for (y = 0; y < kernelSize; y++) {
+        value = weights.get(x, y, 0, filterId);
+        if (value < min) min = value;
+        if (value > max) max = value;
+      }
+    }
+
+    for (x = 0; x < kernelSize; x++) {
+      for (y = 0; y < kernelSize; y++) {
+        value = weights.get(x, y, 0, filterId);
+        value = ((value - min) / (max - min)) * 255;
+
+        canvasCtx.fillStyle = 'rgb(' + value + ',' + value + ',' + value + ')';
+        canvasCtx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+      }
+    }
+  },
+
   visualizePixels: function(canvas) {
-    var model = training.currentModel;
-    var filter = model.layers[0].weights;
-    tf.toPixels(weights, canvas);
+    const model = training.currentModel;
+    const convLayer = model.layers[1];
+    const weights = convLayer.weights[0].read();
+    const bias = convLayer.weights[1].read();
+    const filterId = 1;
+
+    training.drawSingleFilter(weights, filterId, canvas);
   },
 };
