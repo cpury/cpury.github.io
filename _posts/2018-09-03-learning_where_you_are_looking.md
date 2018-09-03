@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Learning where you are looking at (in the browser)"
-date: 2018-08-17 16:54:23
+date: 2018-09-03 21:42:23
 description: "How to train a neural network in the browser to predict where users are looking at"
 categories: machine-learning
 permalink: learning-where-you-are-looking-at/
