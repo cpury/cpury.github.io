@@ -39,7 +39,7 @@ This blog post describes a fully working but minimal version of this idea. To se
 
 ## Preparation
 
-First off, **download `clmtracker.js`** from [their repository](https://github.com/auduno/clmtrackr/raw/dev/build/clmtrackr.js). We will start with an **empty HTML** file that only imports jQuery, TensorFlow.js, `clmtracker.js` and a `main.js` that we will be working on later:
+First off, **download `clmtrackr.js`** from [their repository](https://github.com/auduno/clmtrackr/raw/dev/build/clmtrackr.js). We will start with an **empty HTML** file that only imports jQuery, TensorFlow.js, `clmtrackr.js` and a `main.js` that we will be working on later:
 
 {% highlight html %}
 <!doctype html>
@@ -85,7 +85,7 @@ We can add more code to the `onStreaming()` function later on.
 
 ## Finding your face
 
-Next, let's use clmtracker.js to find your face in the video. First, initialize the tracker right underneath `const video = ...`:
+Next, let's use clmtrackr.js to find your face in the video. First, initialize the tracker right underneath `const video = ...`:
 
 {% highlight js %}
 const ctrack = new clm.tracker();
@@ -121,7 +121,7 @@ Inside the HTML, add this under the existing `<video>`-element:
 
 This adds a canvas with the same size. The CSS guarantees that they are exactly at the same position.
 
-Now **each time the browser renders**, we want to **draw something to the canvas**. Running a method at each frame is done via `requestAnimationLoop()`. Before we draw something to the canvas, we should remove the current content by clearing it. Then finally we can tell clmtracker to **draw straight to the canvas**.
+Now **each time the browser renders**, we want to **draw something to the canvas**. Running a method at each frame is done via `requestAnimationLoop()`. Before we draw something to the canvas, we should remove the current content by clearing it. Then finally we can tell clmtrackr to **draw straight to the canvas**.
 
 Here's the code. Add it underneath `ctrack.init()`:
 
@@ -174,7 +174,7 @@ Add this new eyes-canvas to the HTML:
 </style>
 {% endhighlight %}
 
-This function will return the x, y, width and height of the rectangle surrounding the eyes. It takes as input the position-array we get from clmtracker. Add it to your JS file:
+This function will return the x, y, width and height of the rectangle surrounding the eyes. It takes as input the position-array we get from clmtrackr. Add it to your JS file:
 
 {% highlight js %}
 function getEyesRectangle(positions) {
