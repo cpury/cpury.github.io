@@ -13,13 +13,22 @@
 	"syntax"
 ;
 
+*,
+*:before,
+*:after {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+}
+
 .cta-wrapper {
 	width: 100%;
 	text-align: center;
 	margin: 3em 0;
 
 	.cta {
-		padding: 0.5em 2em;
+		padding: 0.5em 0.8em;
 		border-radius: 10px;
 		text-align: center;
 		color: rgba(0,0,0,.8);
@@ -35,6 +44,10 @@
 			text-decoration: underline;
 			border-color: rgba(black, 0.4);
 			background-color: rgba(#82c8a0, 0.4);
+		}
+
+		@media screen and (min-width: 500px) {
+			padding: 0.5em 2em;
 		}
 	}
 }

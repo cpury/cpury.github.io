@@ -17,6 +17,9 @@ Try out the complete project [here](https://cpury.github.io/lookie-lookie/). Thi
     <a href="https://cpury.github.io/lookie-lookie/" class="cta" target="_blank">Check out the result 🚀</a>
 </div>
 
+<div class="cta-wrapper">
+    <a href="https://github.com/cpury/lookie-lookie" class="cta" target="_blank">Get the full code 🚀</a>
+</div>
 
 ## The Idea
 
