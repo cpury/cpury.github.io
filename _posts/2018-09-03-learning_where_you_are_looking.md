@@ -27,7 +27,7 @@ Try out the complete project [here](https://cpury.github.io/lookie-lookie/). Thi
 
 In the browser, we can easily get access to the user's webcam. Taking the **whole image** would be **too large** an input for the net, and it would have to do a lot of work before it could even find out where the eyes are. This might be fine in a model that we train offline and deploy on a server, but to be trained and used in the browser, this would be too daunting a task.
 
-To help the network, we can provide it only the **part of the image around the user's eyes**. This rectangle surrounding the eyes can be located using a third party library. So the first part of the pipeline looks like this:
+In order to help the network, we can provide it with only the **part of the image around the user's eyes**. This rectangle surrounding the eyes can be located using a third party library. So the first part of the pipeline looks like this:
 
 {% include svgs/lookie-lookie_extraction.svg %}
 
@@ -42,7 +42,7 @@ This blog post describes a fully working but minimal version of this idea. To se
 
 ## Preparation
 
-First off, **download `clmtrackr.js`** from [their repository](https://github.com/auduno/clmtrackr/raw/dev/build/clmtrackr.js). We will start with an **empty HTML** file that only imports jQuery, TensorFlow.js, `clmtrackr.js` and a `main.js` that we will be working on later:
+First off, **download `clmtrackr.js`** from [its repository](https://github.com/auduno/clmtrackr/raw/dev/build/clmtrackr.js). We will start with an **empty HTML** file that only imports jQuery, TensorFlow.js, `clmtrackr.js` and a `main.js` that we will be working on later:
 
 {% highlight html %}
 <!doctype html>
@@ -177,7 +177,7 @@ Add this new eyes-canvas to the HTML:
 </style>
 {% endhighlight %}
 
-This function will return the x, y, width and height of the rectangle surrounding the eyes. It takes as input the position-array we get from clmtrackr. Note that each position we get from clmtrackr has an x and a y component. Add it to your JS file:
+This function will return the x, y coordinates and width and height of the rectangle surrounding the eyes. It takes as input the position-array we get from clmtrackr. Note that each position we get from clmtrackr has an x and a y component. Add it to your JS file:
 
 {% highlight js %}
 function getEyesRectangle(positions) {
@@ -258,7 +258,7 @@ document.onmousemove = mouse.handleMouseMove;
 
 #### Capturing images
 
-To **capture an image from a canvas** and **store it as a tensor**, TensorFlow.js offers the helper function `tf.fromPixels()`. Let's use it to store and then normalize an image from our eyes canvas:
+In order to **capture an image from a canvas** and **store it as a tensor**, TensorFlow.js offers the helper function `tf.fromPixels()`. Let's use it to store and then normalize an image from our eyes canvas:
 
 {% highlight js %}
 function getImage() {
@@ -275,7 +275,7 @@ function getImage() {
 
 Note that `tf.tidy()` makes TensorFlow.js clean up our mess after we're done.
 
-Each new training example should go either to the **training or a separate validation set** in 20% of the cases. The actual model training then only happens on the training set, while we check its performance on the validation set. This is so we can measure how much the model can generalize to unseen data.
+We could simply store all examples in one big **training set**, but in Machine Learning it is important to make sure that your model is not just learning the data by heart. That's why we should save some examples in a separate **validation set**. Then we can check how the model fairs on unseen data and make sure it's not overfitting to the training set. For this, I split off 20% to go into the validation set.
 
 Here's the code to add new data points:
 
@@ -340,7 +340,7 @@ Now, each time you hit space, an image with the corresponding mouse position sho
 
 ## Training a model
 
-Let's create a simple **convolutional neural network**. TensorFlow.js provides a Keras-like API for this. The network should have a **conv layer**, **max-pooling**, and finally a **dense layer with two output values** (the screen coordinates). In between, I added **dropout** as a regularizer and `flatten` to convert 2D-data to 1D. Training is done with the **Adam** optimizer.
+Let's create a simple **convolutional neural network**. TensorFlow.js provides a Keras-like API for this. The network should have a **conv layer**, **max-pooling**, and finally a **dense layer with two output values** (the screen coordinates). In between, I added **dropout** as a regularizer and `flatten` to convert 2D-data into 1D. Training is done with the **Adam** optimizer.
 
 I arrived at these values after toying around on my MacBook Air. Feel free to **experiment** with them or to **add more layers**!
 
@@ -385,7 +385,7 @@ function createModel() {
 }
 {% endhighlight %}
 
-To train the network, we set a fixed epoch number and a variable batch size (since we might be dealing with very small datasets).
+Before training the network, we set a fixed epoch number and a variable batch size (since we might be dealing with very small datasets).
 
 {% highlight js %}
 function fitModel() {
