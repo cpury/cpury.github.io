@@ -71,7 +71,7 @@ Now let's start with our main.js:
 
 {% highlight js %}
 $(document).ready(function() {
-  const video = document.getElementById("webcam");
+  const video = $('#webcam')[0];
 
   function onStreaming(stream) {
     video.srcObject = stream;
@@ -105,7 +105,7 @@ And that's it! Your face should be detected!
 
 ... don't believe me? Okay, let's draw a shape around your face to prove it.
 
-For that, we need a way to draw right on top of the video element. Drawing in general is done via the `<canvas>` tag in HTML. So we need to create an **overlayed canvas element** right ontop of the video.
+For that, we need a way to draw over the video element. Drawing in general is done via the `<canvas>` tag in HTML. So we need to create an **overlayed canvas element** right on top of the video.
 
 Inside the HTML, add this under the existing `<video>`-element:
 
@@ -129,7 +129,7 @@ Now **each time the browser renders**, we want to **draw something to the canvas
 Here's the code. Add it underneath `ctrack.init()`:
 
 {% highlight js %}
-const overlay = document.getElementById('overlay');
+const overlay = $('#overlay')[0];
 const overlayCC = overlay.getContext('2d');
 
 function trackingLoop() {
@@ -177,7 +177,7 @@ Add this new eyes-canvas to the HTML:
 </style>
 {% endhighlight %}
 
-This function will return the x, y, width and height of the rectangle surrounding the eyes. It takes as input the position-array we get from clmtrackr. Add it to your JS file:
+This function will return the x, y, width and height of the rectangle surrounding the eyes. It takes as input the position-array we get from clmtrackr. Note that each position we get from clmtrackr has an x and a y component. Add it to your JS file:
 
 {% highlight js %}
 function getEyesRectangle(positions) {
@@ -214,7 +214,7 @@ if (currentPosition) {
   const resizeFactorY = video.videoHeight / video.height;
 
   // Crop the eyes from the video and paste them in the eyes canvas:
-  const eyesCanvas = document.getElementById('eyes');
+  const eyesCanvas = $('#eyes')[0];
   const eyesCC = eyesCanvas.getContext('2d');
 
   eyesCC.drawImage(
@@ -264,7 +264,7 @@ To **capture an image from a canvas** and **store it as a tensor**, TensorFlow.j
 function getImage() {
   // Capture the current image in the eyes canvas as a tensor.
   return tf.tidy(function() {
-    const image = tf.fromPixels(document.getElementById('eyes'));
+    const image = tf.fromPixels($('#eyes')[0]);
     // Add a batch dimension:
     const batchedImage = image.expandDims(0);
     // Normalize and return it:
@@ -275,7 +275,9 @@ function getImage() {
 
 Note that `tf.tidy()` makes TensorFlow.js clean up our mess after we're done.
 
-Each new training example should go either to the **training or a separate validation set** in 20% of the cases. Here's the code to add new data points:
+Each new training example should go either to the **training or a separate validation set** in 20% of the cases. The actual model training then only happens on the training set, while we check its performance on the validation set. This is so we can measure how much the model can generalize to unseen data.
+
+Here's the code to add new data points:
 
 {% highlight js %}
 const dataset = {
@@ -305,7 +307,7 @@ function captureExample() {
       subset.x = tf.keep(image);
       subset.y = tf.keep(mousePos);
     } else {
-      // Concatinate it to existing tensors
+      // Concatenate it to existing tensors
       const oldX = subset.x;
       const oldY = subset.y;
 
