@@ -275,7 +275,7 @@ function getImage() {
 
 Note that `tf.tidy()` makes TensorFlow.js clean up our mess after we're done.
 
-We could simply store all examples in one big **training set**, but in Machine Learning it is important to make sure that your model is not just learning the data by heart. That's why we should save some examples in a separate **validation set**. Then we can check how the model fairs on unseen data and make sure it's not overfitting to the training set. For this, I split off 20% to go into the validation set.
+We could simply store all examples in one big **training set**, but in machine learning it is important to make sure that your model is not just learning the data by heart. That's why we should save some examples in a separate **validation set**. Then we can check how the model fares on unseen data and make sure it's not overfitting to the training set. For this, I split off 20% to go into the validation set.
 
 Here's the code to add new data points:
 
@@ -435,7 +435,7 @@ $('#train').click(function() {
 
 ## Time to predict!
 
-Now that we can collect a dataset and have a model set up, we have to start **predicting where the user is looking**. Let's display this with a **green sphere** that moves over the screen.
+Now that we can collect a dataset and have a model set up, we can start **predicting where the user is looking at**. Let's display this with a **green sphere** that moves over the screen.
 
 First, let's add the sphere by itself:
 
@@ -455,7 +455,7 @@ First, let's add the sphere by itself:
 </style>
 {% endhighlight %}
 
-To move the sphere, we periodically pass the current eyes image to the the neural network and ask "Where are they looking at?". The model returns us two coordinates and we can move the sphere there:
+To move the sphere, we periodically pass the current eyes image to the the neural network and ask "Where are they looking at?". The model answers with two coordinates where we should move the sphere to:
 
 {% highlight js %}
 function moveTarget() {
@@ -489,19 +489,19 @@ I set the interval to be 100 ms. If your computer is slower than mine, you might
 
 Alright! We have implemented all the moving parts.
 
-**Try them out**: Move your mouse over the browser window, follow it with your eyes, and spam the space key. Then hit the train button from time to time. The green ball should start following your eyes around! It may be bad in the beginning, but starting at around ~50 training examples, repeated training and some luck, it should get pretty good.
+**Try them out**: Move your mouse over the browser window, follow it with your eyes, and spam the space key. Then hit the train button from time to time. The green sphere should start following your eyes around! It may be bad in the beginning, but starting at around ~50 training examples, repeated training and some luck, it should get pretty good.
 
 Find the **complete code of this tutorial** [here](https://github.com/cpury/lookie-lookie/tree/master/blogcode).
 
-While this is quite cool already, there is much **room for improvement**! What if the user moves their head or changes their posture? It would be great to have some meta-features, like the size, position and angle of the eyes rectangle. These and many more ideas I added to the code in my repository. You can try out the full version [here](https://cpury.github.io/lookie-lookie/) and look at the code [here](https://github.com/cpury/lookie-lookie). Some of the additional features I built:
+While this is quite cool already, there is much **room for improvement**! What if the user **moves their head** or **changes their posture**? It would be great to have some **additional features**, like the size, position and angle of the eyes rectangle. These and many more ideas I added to the code in my repository. You can try out the full version [here](https://cpury.github.io/lookie-lookie/) and look at the code [here](https://github.com/cpury/lookie-lookie). Some of the additional features I built:
 
-- **Meta features** as mentioned above
+- **Additional features** as mentioned above
 - Convert images to **grayscale**
 - **CoordConv** ([info](https://eng.uber.com/coordconv/))
 - **Heatmap** to check where the model succeeds or fails
 - Ability to **save/load the dataset**
 - Ability to **save/load the model**
 - **Retain weights** with **lowest validation** loss after training
-- **Better UI**
+- **Better UI** with a short **tutorial**
 
 Thanks for reading! Please leave your comments, feedback and ideas below.
