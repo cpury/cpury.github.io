@@ -31,23 +31,34 @@
 		padding: 0.5em 0.8em;
 		border-radius: 10px;
 		text-align: center;
-		color: rgba(0,0,0,.8);
+		color: rgba(black, .9);
 		text-decoration: none;
 		font-family: "Open Sans", sans-serif;
-		font-size: 140%;
+		font-size: 2rem;
 		transition: 0.5s all;
 
-		background-color: rgba(#82c8a0, 0.2);
-		border: 1px solid rgba(black, 0.2);
+		background-color: lighten(#209cee, 20%);
+		// border: 1px solid darken(#209cee, 20%);
 
 		&:hover {
 			text-decoration: underline;
-			border-color: rgba(black, 0.4);
-			background-color: rgba(#82c8a0, 0.4);
+			// border-color: darken(#209cee, 40%);
+			background-color: lighten(#209cee, 0%);
+			text-decoration: none;
 		}
 
 		@media screen and (min-width: 500px) {
 			padding: 0.5em 2em;
+			font-size: 3rem;
 		}
 	}
+}
+
+.warning {
+	background-color: #ffdd57;
+	color: rgba(0,0,0,.7);
+	margin-bottom: 1.5rem;
+	border-radius: 4px;
+	padding: 1.25rem 2.5rem 1.25rem 1.5rem;
+	position: relative;
 }
