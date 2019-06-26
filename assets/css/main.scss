@@ -67,7 +67,7 @@
   position: relative;
 }
 
-.home-template .main-header {
+.home-template .main-header:not(.post-head) {
   $bg-color: #05668d;
   $text-color: #f0f3bd;
 
