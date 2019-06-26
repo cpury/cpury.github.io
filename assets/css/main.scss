@@ -5,7 +5,7 @@
 
 /* We need to add display:inline in order to align the '>>' of the 'read more' link */
 .post-excerpt p {
-	display:inline;
+	display: inline;
 }
 
 // Import partials from `sass_dir` (defaults to `_sass`)
@@ -61,4 +61,47 @@
 	border-radius: 4px;
 	padding: 1.25rem 2.5rem 1.25rem 1.5rem;
 	position: relative;
+}
+
+.home-template .main-header {
+	$bg-color: #05668D;
+	$text-color: #F0F3BD;
+
+	padding: 0;
+
+	.main-nav {
+		a.subscribe-button {
+			color: $text-color;
+			border-color: $text-color;
+			background-color: $bg-color;
+			transition: all 0.1s ease;
+
+			&:hover {
+				color: darken($text-color, 20%);
+				background-color: rgba(black, 0.2);
+			}
+		}
+	}
+
+	.vertical {
+		background-color: $bg-color;
+
+		@media only screen and (max-width: 500px) {
+			.inner {
+				margin: 3rem auto;
+			}
+		}
+
+		h1, h2 {
+			color: $text-color;
+		}
+
+		a {
+			color: $text-color;
+
+			&:hover {
+				color: darken($text-color, 20%);
+			}
+		}
+	}
 }
