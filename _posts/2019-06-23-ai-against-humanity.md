@@ -20,9 +20,6 @@ image: /assets/images/aiah.png
     <a href="https://www.aiagainsthumanity.app/" class="cta" target="_blank">Check out the result 🚀</a>
 </div>
 
-Example screenshot:
-![Screenshot of a typical game situation]({{ site.url }}/assets/images/aiah.png)
-
 In this blog post, I want to detail the process of how a **little experiment** with a language model turned into a **complete browser game** including an **AI opponent**. I hope it can serve as a **case study of how to quickly build and ship ML / web ideas**.
 
 
@@ -34,6 +31,8 @@ In this blog post, I want to detail the process of how a **little experiment** w
 - I use a simple **AWS Lambda** function to keep track of user interactions
 - The AI opponent uses PCA-reduced **BERT-Embeddings** and a small neural network to make decisions
 - It was trained on **aggregated interaction data** of users playing the game in the early phase
+
+![Screenshot of a typical game situation]({{ site.url }}/assets/images/aiah.png)
 
 
 ### The Idea
