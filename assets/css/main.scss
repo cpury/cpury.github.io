@@ -5,103 +5,108 @@
 
 /* We need to add display:inline in order to align the '>>' of the 'read more' link */
 .post-excerpt p {
-	display: inline;
+  display: inline;
 }
 
 // Import partials from `sass_dir` (defaults to `_sass`)
-@import
-	"syntax"
-;
+@import "syntax";
 
 *,
 *:before,
 *:after {
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-ms-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
 }
 
 .cta-wrapper {
-	width: 100%;
-	text-align: center;
-	margin: 3em 0;
+  width: 100%;
+  text-align: center;
+  margin: 3em 0;
 
-	.cta {
-		padding: 0.5em 0.8em;
-		border-radius: 10px;
-		text-align: center;
-		color: rgba(black, .9);
-		text-decoration: none;
-		font-family: "Open Sans", sans-serif;
-		font-size: 2rem;
-		transition: 0.5s all;
+  .cta {
+    border-radius: 4px;
+    background-color: #209cee;
+    border-color: transparent;
+    color: #fff;
+    border-width: 1px;
+    cursor: pointer;
+    justify-content: center;
+    padding-bottom: calc(0.375em - 1px);
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    padding-top: calc(0.375em - 1px);
+    text-align: center;
+    white-space: nowrap;
+    user-select: none;
+    text-decoration: none;
+    font-family: "Open Sans", sans-serif;
+    font-size: 2rem;
+    transition: 0.5s all;
 
-		background-color: lighten(#209cee, 20%);
-		// border: 1px solid darken(#209cee, 20%);
+    &:hover {
+      text-decoration: underline;
+      background-color: darken(#209cee, 10%);
+      text-decoration: none;
+    }
 
-		&:hover {
-			text-decoration: underline;
-			// border-color: darken(#209cee, 40%);
-			background-color: lighten(#209cee, 0%);
-			text-decoration: none;
-		}
-
-		@media screen and (min-width: 500px) {
-			padding: 0.5em 2em;
-			font-size: 3rem;
-		}
-	}
+    @media screen and (min-width: 500px) {
+      padding: 0.5em 2em;
+      font-size: 3rem;
+    }
+  }
 }
 
 .warning {
-	background-color: #ffdd57;
-	color: rgba(0,0,0,.7);
-	margin-bottom: 1.5rem;
-	border-radius: 4px;
-	padding: 1.25rem 2.5rem 1.25rem 1.5rem;
-	position: relative;
+  background-color: #ffdd57;
+  color: rgba(0, 0, 0, 0.7);
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+  padding: 1.25rem 2.5rem 1.25rem 1.5rem;
+  position: relative;
 }
 
 .home-template .main-header {
-	$bg-color: #05668D;
-	$text-color: #F0F3BD;
+  $bg-color: #05668d;
+  $text-color: #f0f3bd;
 
-	padding: 0;
+  padding: 0;
 
-	.main-nav {
-		a.subscribe-button {
-			color: $text-color;
-			border-color: $text-color;
-			background-color: $bg-color;
-			transition: all 0.1s ease;
+  .main-nav {
+    a.subscribe-button {
+      color: $text-color;
+      border-color: $text-color;
+      background-color: $bg-color;
+      transition: all 0.1s ease;
 
-			&:hover {
-				color: darken($text-color, 20%);
-				background-color: rgba(black, 0.2);
-			}
-		}
-	}
+      &:hover {
+        color: darken($text-color, 20%);
+        background-color: rgba(black, 0.2);
+      }
+    }
+  }
 
-	.vertical {
-		background-color: $bg-color;
+  .vertical {
+    background-color: $bg-color;
 
-		@media only screen and (max-width: 500px) {
-			.inner {
-				margin: 3rem auto;
-			}
-		}
+    @media only screen and (max-width: 500px) {
+      .inner {
+        margin: 3rem auto;
+      }
+    }
 
-		h1, h2 {
-			color: $text-color;
-		}
+    h1,
+    h2 {
+      color: $text-color;
+    }
 
-		a {
-			color: $text-color;
+    a {
+      color: $text-color;
 
-			&:hover {
-				color: darken($text-color, 20%);
-			}
-		}
-	}
+      &:hover {
+        color: darken($text-color, 20%);
+      }
+    }
+  }
 }
