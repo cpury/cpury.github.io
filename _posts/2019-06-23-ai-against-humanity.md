@@ -122,7 +122,7 @@ I’m really impressed with the results myself. The game is fun, the AI player h
     <a href="https://www.aiagainsthumanity.app/" class="cta" target="_blank">Start the Game 🚀</a>
 </div>
 
-Now, **did we make an AI understand and create real humor?** Probably not. GPT-2 and other language models are famous for their incoherent rambling, like a kid talking in their sleep. Exactly this randmoness comes to our aid here. Because randomness *can* be very funny. And I selected the funny ones for you to enjoy 👌. A lot of the more creative ideas probably come from some deep dark corner of the web that OpenAI used for their pre-training. Remember what **Jim Jarmusch** said:
+Now, **did we make an AI understand and create real humor?** Probably not. GPT-2 and other language models are famous for their incoherent rambling, like a kid talking in their sleep. Exactly this randomness comes to our aid here. Because being random *can* be very funny. And I selected the funny ones for you to enjoy 👌. A lot of the more creative ideas probably come from some deep dark corner of the web that OpenAI used for their pre-training. Remember what **Jim Jarmusch** said:
 
 > “Nothing is original. Steal from anywhere that resonates with inspiration or fuels your imagination. \[...\] If you do this, your work (and theft) will be authentic. Authenticity is invaluable; originality is non-existent. And don’t bother concealing your thievery - celebrate it if you feel like it. In any case, always remember what Jean-Luc Godard said: “It’s not where you take things from - it’s where you take them to."
 
