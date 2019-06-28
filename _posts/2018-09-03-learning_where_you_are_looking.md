@@ -3,12 +3,17 @@ layout: post
 title: "Learning where you are looking at (in the browser)"
 date: 2018-09-03 21:42:23
 description: "How to train a neural network in the browser to predict where users are looking at"
+excerpt: >
+  Today, let’s talk about how to learn a complex computer vision problem right in the browser! Thanks to TensorFlow’s JavaScript Library, this is easy to realize. Instead of training our own model and serving it as a finished product, we will let the user collect their own data and then train the model right there, on the client machine. Absolutely no server is neccessary! (Updated 28 JUN 2019)
 categories: machine-learning
 permalink: learning-where-you-are-looking-at/
 tags: [machine-learning, computer-vision]
 disqus: true
 image: /assets/images/eye.jpg
 ---
+
+**Updated 28 JUN 2019:** Updated TFJS version to 1.1 (latest)
+
 Today, let's talk about how to learn a **complex computer vision problem right in the browser**! Thanks to [TensorFlow's JavaScript Library](https://js.tensorflow.org/), this is easy to realize. Instead of training our own model and serving it as a finished product, we will **let the user collect their own data** and then **train the model** right there, **on the client** machine. **Absolutely no server is neccessary!**
 
 Try out the complete project [here](https://cpury.github.io/lookie-lookie/). This requires a modern browser, a webcam, and a mouse. I did not have the time to tweak this to work on tablets/phones 😨. And of course, things get much harder when the camera is not stationary.
