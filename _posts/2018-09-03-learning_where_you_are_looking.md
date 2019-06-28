@@ -49,7 +49,7 @@ First off, **download `clmtrackr.js`** from [its repository](https://github.com/
 <html>
 <body>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.12.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.1.0"></script>
     <script src="clmtrackr.js"></script>
     <script src="main.js"></script>
 </body>
@@ -258,13 +258,13 @@ document.onmousemove = mouse.handleMouseMove;
 
 #### Capturing images
 
-In order to **capture an image from a canvas** and **store it as a tensor**, TensorFlow.js offers the helper function `tf.fromPixels()`. Let's use it to store and then normalize an image from our eyes canvas:
+In order to **capture an image from a canvas** and **store it as a tensor**, TensorFlow.js offers the helper function `tf.browser.fromPixels()`. Let's use it to store and then normalize an image from our eyes canvas:
 
 {% highlight js %}
 function getImage() {
   // Capture the current image in the eyes canvas as a tensor.
   return tf.tidy(function() {
-    const image = tf.fromPixels($('#eyes')[0]);
+    const image = tf.browser.fromPixels($('#eyes')[0]);
     // Add a batch dimension:
     const batchedImage = image.expandDims(0);
     // Normalize and return it:
@@ -469,8 +469,8 @@ function moveTarget() {
     // Convert normalized position back to screen position:
     const targetWidth = $('#target').outerWidth();
     const targetHeight = $('#target').outerHeight();
-    const x = (prediction.get(0, 0) + 1) / 2 * ($(window).width() - targetWidth);
-    const y = (prediction.get(0, 1) + 1) / 2 * ($(window).height() - targetHeight);
+    const x = (prediction.dataSync()[0] + 1) / 2 * ($(window).width() - targetWidth);
+    const y = (prediction.dataSync()[1] + 1) / 2 * ($(window).height() - targetHeight);
 
     // Move target there:
     const $target = $('#target');
