@@ -35,6 +35,10 @@ this at home, get your long-neglected Pythons out of their cages! You can find
 the complete code with lots of improvements
 [here](https://github.com/cpury/lstm-math).
 
+**NEW**: Just try the complete project here in Google Colab! For free!
+
+[Colab Link](https://colab.research.google.com/github/cpury/lstm-math/blob/master/lstm_math.ipynb)
+
 
 ### Recurrent Neural Networks and Long-Short-Term-Memory
 
