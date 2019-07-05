@@ -6,7 +6,7 @@ description: "Let's build a neural network that can do math. In Keras."
 excerpt: >
   Since ancient times, it has been known that machines excel at math while humans
   are pretty good at detecting cats in pictures. But with the advent of deep
-  learning, the boundaries have started to blur... (Updated 9 DEC 2017)
+  learning, the boundaries have started to blur... (Updated 5 JUL 2019)
 categories: machine-learning
 permalink: learning-math/
 tags: [machine-learning, recurrent-neural-networks, keras, nlp]
@@ -14,7 +14,7 @@ disqus: true
 image: /assets/images/math.jpg
 ---
 
-**Updated 8 DEC 2017:** Improved the model and rewrote some parts
+**Updated 5 JUL 2019:** Improved the model and added a prediction helper
 
 
 Since ancient times, it has been known that machines excel at math while humans
@@ -316,11 +316,13 @@ First, we need to decide what the shape of our inputs is supposed to be. Since
 it's a matrix with a one-hot-vector for each position in the equation string,
 this is simply `(MAX_EQUATION_LENGTH, N_FEATURES)`. We'll pass that input to a
 first layer consisting of 20 (bidirectional) LSTM cells. Each will look at the input,
-character by character, and output a single value.
+character by character, and output a single value. All these values together
+are called our embedding or input representation. Essentially, it's a vector
+of values that describe our input sequence.
 
-There are several ways to build a Seq2Seq model. The simplest way is to simply
-collect all information about the input sequence in a fixed vector, then have
-the decoder generate a sequence from that. To make this possible, we use
+There are several ways to build a Seq2Seq model. Essentially, you want each
+timestep in the decoder to have access to both the embedding vector and its
+own output at the previous timestep. To make this possible, we use
 `RepeatVector` to feed the decoder network with the representation in each time
 step. For a more detailed discussion about Seq2Seq models in Keras, see
 [here](https://github.com/fchollet/keras/issues/5203).
@@ -336,18 +338,12 @@ Since we expect something like a one-hot vector for each output character,
 we still need to apply `softmax` as usual in classification problems. This
 essentially yields us a probability distribution over the character classes.
 
-Note that from what I gathered, this way of building Seq2Seq models in Keras
-is not optimal and not exactly equivalent to what is proposed in the paper. It
-works nonetheless. For a more correct implementation, try out
-[Fariz Rahman's seq2seq package](https://github.com/farizrahman4u/seq2seq).
-
 Either way, here is our code:
 
 {% highlight python %}
 from keras.models import Sequential
 from keras.layers import LSTM, RepeatVector, Dense, Activation
 from keras.layers.wrappers import TimeDistributed, Bidirectional
-from keras.layers.normalization import BatchNormalization
 from keras.optimizers import Adam
 
 def build_model():
@@ -360,14 +356,12 @@ def build_model():
 
     # Encoder:
     model.add(Bidirectional(LSTM(20), input_shape=input_shape))
-    model.add(BatchNormalization())
 
     # The RepeatVector-layer repeats the input n times
     model.add(RepeatVector(MAX_RESULT_LENGTH))
 
     # Decoder:
     model.add(Bidirectional(LSTM(20, return_sequences=True)))
-    model.add(BatchNormalization())
 
     model.add(TimeDistributed(Dense(N_FEATURES)))
     model.add(Activation('softmax'))
@@ -392,12 +386,15 @@ epoch. Here's the main function of our code:
 from keras.callbacks import ModelCheckpoint
 
 def main():
+    # Fix the random seed to get a consistent dataset
+    random.seed(RANDOM_SEED)
+
+    x_test, y_test, x_train, y_train = build_dataset()
+
     model = build_model()
 
     model.summary()
     print()
-
-    x_test, y_test, x_train, y_train = build_dataset()
 
     # Let's print some predictions now to get a feeling for the equations
     print()
@@ -455,10 +452,34 @@ MAX_RESULT_LENGTH = MAX_NUMBER_LENGTH_RIGHT_SIDE + 1
 SPLIT = .1
 EPOCHS = 200
 BATCH_SIZE = 256
+
+RANDOM_SEED = 1
 {% endhighlight %}
 
 Finally, we can start training. Either call `main()` from the shell, or store
 everything in a file `training.py` and run it via `python training.py`.
+
+
+### Try out the model
+
+Let's write a helper to get the result of an equation as calculated by the model:
+
+{% highlight python %}
+def predict(model, equation):
+    """
+    Given a model and an equation string, returns the predicted result.
+    """
+    x = np.zeros((1, MAX_EQUATION_LENGTH, N_FEATURES), dtype=np.bool)
+    equation += '\0'
+
+    for t, char in enumerate(equation):
+        x[0, t, CHAR_TO_INDEX[char]] = 1
+
+    predictions = model.predict(x)
+    return one_hot_to_string(predictions[0])[:-1]
+{% endhighlight %}
+
+Try it: `predict(model, '123 + 321')`.
 
 
 ### Results
