@@ -479,7 +479,7 @@ def predict(model, equation):
     return one_hot_to_string(predictions[0])[:-1]
 {% endhighlight %}
 
-Try it: `predict(model, '123 + 321')`.
+Try it (just don't forget the spaces): `predict(model, '123 + 321')`.
 
 
 ### Results
