@@ -9,12 +9,14 @@ excerpt: >
   learning, the boundaries have started to blur... (Updated 5 JUL 2019)
 categories: machine-learning
 permalink: learning-math/
-tags: [machine-learning, recurrent-neural-networks, keras, nlp]
+tags: [machine-learning, recurrent-neural-networks, keras, nlp, tensorflow]
 disqus: true
 image: /assets/images/math.jpg
 ---
 
 **Updated 5 JUL 2019:** Improved the model and added a prediction helper
+
+**Updated 19 DEC 2020:** Upgraded to TensorFlow 2 and now using `tensorflow.keras`
 
 
 Since ancient times, it has been known that machines excel at math while humans
@@ -122,7 +124,7 @@ virtualenv with Python 3, try `virtualenv -p python3 venv`.
 Once your virtualenv is activated, install these requirements:
 
 ```
-pip install numpy tensorflow keras
+pip install numpy tensorflow
 ```
 
 If you run into trouble with Tensorflow, follow
@@ -236,12 +238,8 @@ def equations_to_x_y(equations, n):
     Given a list of equations, converts them to one-hot vectors to build
     two data matrixes x and y.
     """
-    x = np.zeros(
-        (n, MAX_EQUATION_LENGTH, N_FEATURES), dtype=np.bool
-    )
-    y = np.zeros(
-        (n, MAX_RESULT_LENGTH, N_FEATURES), dtype=np.bool
-    )
+    x = np.zeros((n, MAX_EQUATION_LENGTH, N_FEATURES), dtype=np.float32)
+    y = np.zeros((n, MAX_RESULT_LENGTH, N_FEATURES), dtype=np.float32)
 
     # Get the first n_test equations and convert to test vectors
     for i, equation in enumerate(itertools.islice(equations, n)):
@@ -314,7 +312,7 @@ training.
 
 ### Building the Model in Keras
 
-Now, let's build the model. Thanks to Keras, this is quite straightforward.
+Now let's build the model. Thanks to Keras, this is quite straightforward.
 
 First, we need to decide what the shape of our inputs is supposed to be. Since
 it's a matrix with a one-hot-vector for each position in the equation string,
@@ -345,10 +343,7 @@ essentially yields us a probability distribution over the character classes.
 Either way, here is our code:
 
 {% highlight python %}
-from keras.models import Sequential
-from keras.layers import LSTM, RepeatVector, Dense, Activation
-from keras.layers.wrappers import TimeDistributed, Bidirectional
-from keras.optimizers import Adam
+from tensorflow import keras
 
 def build_model():
     """
@@ -356,23 +351,23 @@ def build_model():
     """
     input_shape = (MAX_EQUATION_LENGTH, N_FEATURES)
 
-    model = Sequential()
+    model = keras.Sequential()
 
     # Encoder:
-    model.add(Bidirectional(LSTM(20), input_shape=input_shape))
+    model.add(keras.layers.Bidirectional(keras.layers.LSTM(20), input_shape=input_shape))
 
     # The RepeatVector-layer repeats the input n times
-    model.add(RepeatVector(MAX_RESULT_LENGTH))
+    model.add(keras.layers.RepeatVector(MAX_RESULT_LENGTH))
 
     # Decoder:
-    model.add(Bidirectional(LSTM(20, return_sequences=True)))
+    model.add(keras.layers.Bidirectional(keras.layers.LSTM(20, return_sequences=True)))
 
-    model.add(TimeDistributed(Dense(N_FEATURES)))
-    model.add(Activation('softmax'))
+    model.add(keras.layers.TimeDistributed(keras.layers.Dense(N_FEATURES)))
+    model.add(keras.layers.Activation('softmax'))
 
     model.compile(
         loss='categorical_crossentropy',
-        optimizer=Adam(lr=0.01),
+        optimizer=keras.optimizers.Adam(lr=0.01),
         metrics=['accuracy'],
     )
 
@@ -387,8 +382,6 @@ callbacks like the `ModelCheckpoint`, which stores the best model after each
 epoch. Here's the main function of our code:
 
 {% highlight python %}
-from keras.callbacks import ModelCheckpoint
-
 def main():
     # Fix the random seed to get a consistent dataset
     random.seed(RANDOM_SEED)
@@ -412,7 +405,7 @@ def main():
             batch_size=BATCH_SIZE,
             validation_data=(x_test, y_test),
             callbacks=[
-                ModelCheckpoint(
+                keras.callbacks.ModelCheckpoint(
                     'model.h5',
                     save_best_only=True,
                 ),
@@ -425,10 +418,6 @@ def main():
     model.load_weights('model.h5')
 
     print_example_predictions(20, model, x_test, y_test)
-
-
-if __name__ == '__main__':
-    main()
 {% endhighlight %}
 
 Finally, we need to fill in some of the global variables we used throughout
@@ -460,7 +449,7 @@ BATCH_SIZE = 256
 RANDOM_SEED = 1
 {% endhighlight %}
 
-Finally, we can start training. Either call `main()` from the shell, or store
+Now we can start training. Either call `main()` from the shell, or store
 everything in a file `training.py` and run it via `python training.py`.
 
 
