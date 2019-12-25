@@ -6,7 +6,7 @@ description: "Let's build a neural network that can do math. In Keras."
 excerpt: >
   Since ancient times, it has been known that machines excel at math while humans
   are pretty good at detecting cats in pictures. But with the advent of deep
-  learning, the boundaries have started to blur... (Updated 5 JUL 2019)
+  learning, the boundaries have started to blur... (Updated 19 DEC 2019)
 categories: machine-learning
 permalink: learning-math/
 tags: [machine-learning, recurrent-neural-networks, keras, nlp, tensorflow]
@@ -16,7 +16,7 @@ image: /assets/images/math.jpg
 
 **Updated 5 JUL 2019:** Improved the model and added a prediction helper
 
-**Updated 19 DEC 2020:** Upgraded to TensorFlow 2 and now using `tensorflow.keras`
+**Updated 19 DEC 2019:** Upgraded to TensorFlow 2 and now using `tensorflow.keras`
 
 
 Since ancient times, it has been known that machines excel at math while humans
