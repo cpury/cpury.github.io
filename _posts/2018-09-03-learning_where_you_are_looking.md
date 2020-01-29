@@ -12,7 +12,7 @@ disqus: true
 image: /assets/images/eye.jpg
 ---
 
-**Updated 28 JUN 2019:** Updated TFJS version to 1.1 (latest)
+**Updated 29 JAN 2020:** Updated TFJS version to 1.5 and fixed an issue
 
 Today, let's talk about how to learn a **complex computer vision problem right in the browser**! Thanks to [TensorFlow's JavaScript Library](https://js.tensorflow.org/), this is easy to realize. Instead of training our own model and serving it as a finished product, we will **let the user collect their own data** and then **train the model** right there, **on the client** machine. **Absolutely no server is neccessary!**
 
@@ -54,7 +54,7 @@ First off, **download `clmtrackr.js`** from [its repository](https://github.com/
 <html>
 <body>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.1.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.5.0"></script>
     <script src="clmtrackr.js"></script>
     <script src="main.js"></script>
 </body>
@@ -474,13 +474,17 @@ function moveTarget() {
     // Convert normalized position back to screen position:
     const targetWidth = $('#target').outerWidth();
     const targetHeight = $('#target').outerHeight();
-    const x = (prediction.dataSync()[0] + 1) / 2 * ($(window).width() - targetWidth);
-    const y = (prediction.dataSync()[1] + 1) / 2 * ($(window).height() - targetHeight);
 
-    // Move target there:
-    const $target = $('#target');
-    $target.css('left', x + 'px');
-    $target.css('top', y + 'px');
+    // It's okay to run this async, since we don't have to wait for it.
+    prediction.data().then(prediction => {
+      const x = ((prediction[0] + 1) / 2) * ($(window).width() - targetWidth);
+      const y = ((prediction[1] + 1) / 2) * ($(window).height() - targetHeight);
+
+      // Move target there:
+      const $target = $('#target');
+      $target.css('left', x + 'px');
+      $target.css('top', y + 'px');
+    });
   });
 }
 
